@@ -1,10 +1,15 @@
 import bagel.*;
+import bagel.util.Point;
+import bagel.util.Rectangle;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 
 /**
  * Skeleton Code for SWEN20003 Project 2, Semester 2, 2022
- *
  * Please enter your name below
- * @author
+ * iupadhyaya
  */
 
 public class ShadowDimension extends AbstractGame {
@@ -29,7 +34,7 @@ public class ShadowDimension extends AbstractGame {
      * Method used to read file and create objects (You can change this
      * method as you wish).
      */
-    private void readCSV(){
+    private void readCSV() {
 
     }
 
