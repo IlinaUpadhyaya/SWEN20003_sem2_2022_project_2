@@ -1,17 +1,18 @@
 import bagel.*;
-import bagel.Font;
 import bagel.util.Point;
 
 public class HealthBar {
-    private final Point INSTRUCT_MSG_LOC = new Point(20, 25);
-    private final Font INSTRUCT_MSG = new Font("res/frostbite.ttf", 30);
+    protected double entityHP;
+    protected double remainingHealthPercentage;
+    protected double entityMaxHP;
 
-    public HealthBar(MovableGameEntity entity) {
-        entity.entityHP = entity.entityMaxHP;
-        entity.remainingHealthPercentage = 100.0;
+    public HealthBar(AttackableGameEntity entity) {
+        this.entityMaxHP = entity.entityMaxHP;
+        this.entityHP = entity.entityMaxHP;
+        this.remainingHealthPercentage = entity.remainingHealthPercentage;
     }
 
-    public void onDamage(GameEntity attackEntity, MovableGameEntity damagedEntity, double damage) {
+    public void onDamage(GameEntity attackEntity, AttackableGameEntity damagedEntity, double damage) {
         damagedEntity.entityHP -= damage;
         damagedEntity.remainingHealthPercentage = (damagedEntity.entityHP / damagedEntity.entityMaxHP) * 100;
 
@@ -22,16 +23,16 @@ public class HealthBar {
         }
 
         // print console log message
-        System.out.printf("%s inflicts %d damage points on %s.  %s's current health: %d/%d\n", attackEntity,
-                (int)damage, damagedEntity, attackEntity, (int)Math.round(damagedEntity.entityHP),
-                (int)damagedEntity.entityMaxHP);
+        System.out.printf("%s inflicts %d damage points on %s.  %s's current health: %d/%d\n", attackEntity.toString(),
+                (int)damage, damagedEntity.toString(), damagedEntity.toString(),
+                (int)Math.round(damagedEntity.entityHP), (int)damagedEntity.entityMaxHP);
     }
 
-    public boolean healthOver(MovableGameEntity entity) {
+    public boolean healthOver(AttackableGameEntity entity) {
         return entity.entityHP <= 0;
     }
 
-    public void draw(MovableGameEntity entity) {
+    public void drawHealthBar(AttackableGameEntity entity) {
         DrawOptions drawOptions = new DrawOptions();
         final double ORANGE_THRESHOLD = 65;
         final double RED_THRESHOLD = 35;
@@ -47,7 +48,7 @@ public class HealthBar {
             drawOptions.setBlendColour(1, 0, 0);
         }
 
-        INSTRUCT_MSG.drawString((int)Math.round(entity.remainingHealthPercentage) + "%", INSTRUCT_MSG_LOC.x,
-                INSTRUCT_MSG_LOC.y, drawOptions);
+        entity.HEALTH_BAR_FONT.drawString((int)Math.round(entity.remainingHealthPercentage) + "%",
+                entity.HEALTH_BAR_LOC.x, entity.HEALTH_BAR_LOC.y, drawOptions);
     }
 }

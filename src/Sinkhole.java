@@ -1,7 +1,7 @@
 import bagel.*;
 import bagel.util.Point;
 
-public class Sinkhole extends StationaryGameEntity {
+public class Sinkhole extends GameEntity {
     private static final Image SINKHOLE = new Image("res/sinkhole.png");
     protected final double SINKHOLE_DAMAGE = 30;
 

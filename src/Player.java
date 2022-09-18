@@ -2,7 +2,7 @@ import bagel.*;
 import bagel.util.Point;
 import bagel.util.Rectangle;
 
-public class Player extends MovableGameEntity {
+public class Player extends AttackableGameEntity {
     private static final Image FAE_LEFT = new Image("res/fae/faeLeft.png");
     private static final Image FAE_RIGHT = new Image("res/fae/faeRight.png");
     private static final Image FAE_ATTACK_LEFT = new Image("res/fae/faeAttackLeft.png");
@@ -16,6 +16,8 @@ public class Player extends MovableGameEntity {
         this.entityMaxHP = PLAYER_MAX_HP;
         this.entityHP = this.entityMaxHP;
         this.remainingHealthPercentage = 100.0;
+        this.HEALTH_BAR_LOC = new Point(20, 25);
+        this.HEALTH_BAR_FONT = new Font("res/frostbite.ttf", 30);
     }
 
     @Override
