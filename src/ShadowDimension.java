@@ -9,7 +9,6 @@ import java.util.ArrayList;
  */
 
 public class ShadowDimension extends AbstractGame {
-
     // CONSTANTS
     private final static int WINDOW_WIDTH = 1024;
     private final static int WINDOW_HEIGHT = 768;
@@ -97,8 +96,6 @@ public class ShadowDimension extends AbstractGame {
                 this.gameState = GameState.LEVEL_2_ANNOUNCED;
                 break;
             case A:
-                activeLevel.onKeyInput(Keys.A);
-                break;
             case L:
             case K:
             case LEFT:

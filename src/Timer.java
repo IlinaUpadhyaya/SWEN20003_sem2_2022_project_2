@@ -8,7 +8,7 @@ public class Timer {
     }
 
     public boolean isTimeUp() {
-        /*must be called every update*/
+        // must be called every update
         this.msRemaining -= MS_PERSEC / REFRESH_RATE;
         return this.msRemaining <= 0;
     }

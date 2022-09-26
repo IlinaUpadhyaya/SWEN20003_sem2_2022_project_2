@@ -8,7 +8,7 @@ public class FlameThrower {
     private Image fire;
     private Rectangle boundingBox;
 
-    /*top left coOrdinates of fire after rotation*/
+    // top left coordinates of fire after rotation
     private double x, y, rotation;
     private boolean firing = false;
 
@@ -29,7 +29,6 @@ public class FlameThrower {
         return this.boundingBox;
     }
 
-
     private FireLocation fireLocation;
 
     private double distanceBetweenPoints(Point a, Point b) {
@@ -38,7 +37,7 @@ public class FlameThrower {
 
     private FireLocation inRange(Rectangle enemyBox, Rectangle playerBox) {
         Point enemyCenter = enemyBox.centre();
-        /*does radius intersect left right lines*/
+        // does radius intersect left right lines
         boolean outsideTopAndBottom = false;
         boolean outsideLeftAndRight = false;
         if (enemyCenter.x + this.attackRadius < playerBox.left())
@@ -87,7 +86,7 @@ public class FlameThrower {
         return null;
     }
 
-    /*these are image center locations*/
+    // these are image center locations
     void checkForFire(Rectangle enemyBox, Rectangle playerBox) {
         this.fireLocation = inRange(enemyBox, playerBox);
         if (this.fireLocation == null) {

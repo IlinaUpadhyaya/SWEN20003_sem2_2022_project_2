@@ -144,7 +144,7 @@ public class GameSceneTwo extends GameScene {
     @Override
     public void onKeyInput(Keys key) {
         switch (key) {
-            /*pass speed change onto all enemies that are movable*/
+            // implement speed change onto all moving enemies
             case K:
             case L:
                 for (StationaryGameEntity gameEntity : this.gameEntities) {

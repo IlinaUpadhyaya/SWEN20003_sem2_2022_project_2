@@ -4,10 +4,9 @@ import bagel.util.Point;
 import bagel.util.Rectangle;
 
 public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour {
-
     final static private Image PASSIVE_DEMON_IMAGE = new Image("res/demon/demonRight.png");
     final static private Image PASSIVE_DEMON_FIRE = new Image("res/demon/demonFire.png");
-    private static final double FIREDAMAGE = 10;
+    private static final double FIRE_DAMAGE = 10;
     private double attackRadius = 150;
     private double maxHealthPoints;
     private HealthCalculator health;
@@ -15,7 +14,7 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
     private FlameThrower flameThrower;
 
     public PassiveDemon(double xCoOrd, double yCoOrd) {
-        super(new Point(xCoOrd, yCoOrd), PASSIVE_DEMON_IMAGE, "PASSIVEDEMON",FIREDAMAGE);
+        super(new Point(xCoOrd, yCoOrd), PASSIVE_DEMON_IMAGE, "PASSIVEDEMON", FIRE_DAMAGE);
         this.maxHealthPoints = 40;
         health = new HealthCalculator(this.maxHealthPoints, "PassiveDemon");
         flameThrower = new FlameThrower(PASSIVE_DEMON_FIRE, this.attackRadius);

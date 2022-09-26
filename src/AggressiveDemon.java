@@ -6,16 +6,11 @@ import bagel.util.Rectangle;
 import java.util.Random;
 
 public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour {
-
     private Direction direction;
-
     protected double attackRadius = 150;
     protected FlameThrower flameThrower;
-
     private Random randomizer = new Random();
-    protected Image leftImage, rightImage, leftInvincibleImage,
-            rightInvincibleImage, fireImage;
-
+    protected Image leftImage, rightImage, leftInvincibleImage, rightInvincibleImage, fireImage;
 
     public AggressiveDemon(double xCoOrd, double yCoOrd) {
         super(new Point(xCoOrd, yCoOrd));

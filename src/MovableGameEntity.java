@@ -10,7 +10,6 @@ public abstract class MovableGameEntity extends StationaryGameEntity {
     protected double healthPoints, speed;
     protected HealthCalculator health;
     protected Timer timer;
-
     protected EntityState entityState;
 
     public MovableGameEntity(Point position) {
@@ -34,9 +33,7 @@ public abstract class MovableGameEntity extends StationaryGameEntity {
         return withinXBounds && withinYBounds;
     }
 
-    /**/
-    protected boolean collidesWithGameEntity(Point proposedPos,
-                                             String... gameEntityNames) {
+    protected boolean collidesWithGameEntity(Point proposedPos, String... gameEntityNames) {
         Point centerPos = super.getCenterPosition();
         Point topLeft = super.getTopLeftPosition();
         double xShift = proposedPos.x - topLeft.x;
