@@ -61,10 +61,12 @@ public abstract class MovableGameEntity extends StationaryGameEntity {
             case K:
                 this.speed -= this.speed / 2;
                 if (this.speed < -3.0) speed = -3.0;
+                System.out.printf("Slowed down, Speed: %f\n", this.speed);
                 break;
             case L:
                 this.speed += this.speed / 2;
                 if (this.speed > 3.0) speed = 3.0;
+                System.out.printf("Sped up, Speed: %f\n", this.speed);
                 break;
             default:
                 break;
