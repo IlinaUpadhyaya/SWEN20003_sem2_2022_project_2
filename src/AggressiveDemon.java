@@ -33,7 +33,7 @@ public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour
     }
 
     protected void randomizeStateVariables() {
-        int randomNum = randomizer.nextInt(2);
+        int randomNum = randomizer.nextInt(4);
         switch (randomNum) {
             case 0:
                 this.direction = Direction.UP;
