@@ -133,8 +133,12 @@ public class ShadowDimension extends AbstractGame {
      */
     @Override
     protected void update(Input input) {
+        if (this.timer != null) {
+            this.timer.onFrameUpdate();
+        }
         this.handleUserInput(input);
         this.checkForWinLose();
+
         // now draw
         switch (this.gameState) {
             case LEVEL_1_ANNOUNCED:
@@ -158,6 +162,10 @@ public class ShadowDimension extends AbstractGame {
 
             case LEVEL_2_STARTED:
                 levelTwo.drawGameScreen();
+                break;
+
+            case LEVEL_2_WIN:
+                levelTwo.drawWinScreen();
                 break;
 
             case GAME_LOSE:

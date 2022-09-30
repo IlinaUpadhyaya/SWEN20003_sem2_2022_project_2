@@ -14,6 +14,8 @@ public class Player extends MovableGameEntity {
     private static final int COOLDOWN_TIMEOUT = 2000;
     private static final int INVINCIBLE_TIMEOUT = 3000;
     private final Font MSG_FONT = new Font("res/frostbite.ttf", 40);
+    private Timer invincibleTimer, cooldownTimer, attackTimer;
+
     private void updatePlayerPos(Point newPos) {
         Point currentPos = super.getTopLeftPosition();
         if (newPos.x > currentPos.x) {
@@ -47,8 +49,8 @@ public class Player extends MovableGameEntity {
         // check for sinkhole damage
         // sinkhole collision should be checked with proposed position
         for (StationaryGameEntity gameEntity : gameEntities) {
-            if (((StationaryGameEntity) gameEntity).getName().equals("SINKHOLE")) {
-                StationaryGameEntity sinkhole = (StationaryGameEntity) gameEntity;
+            if ((gameEntity).getName().equals("SINKHOLE")) {
+                StationaryGameEntity sinkhole = gameEntity;
                 if (playerBoundingBox.intersects(sinkhole.getBoundingBox())) {
                     health.onDamage(sinkhole.getDamage(), "Sinkhole");
                     drawableToDelete = gameEntity;
@@ -66,14 +68,14 @@ public class Player extends MovableGameEntity {
                 DemonBehaviour demon = (DemonBehaviour) gameEntity;
                 if (playerBoundingBox.intersects(demon.getFireBoundingBox())) {
                     if (this.entityState != EntityState.INVINCIBLE) {
-                        health.onDamage(gameEntity.getDamage(), gameEntity.toString());
+                        health.onDamage(gameEntity.getDamage(), gameEntity.getName());
                         entityState = EntityState.INVINCIBLE;
-                        this.timer = new Timer(INVINCIBLE_TIMEOUT);
+                        invincibleTimer = new Timer(INVINCIBLE_TIMEOUT);
                     }
                 }
                 if (this.entityState == EntityState.ATTACK &&
                         playerBoundingBox.intersects(((StationaryGameEntity) demon).getBoundingBox())) {
-                    boolean shouldDisappear = demon.onAttacked(this.getDamage(), this.getName());
+                    boolean shouldDisappear = demon.onAttacked(PLAYER_DAMAGE_POINTS, this.getName());
                     if (shouldDisappear) entityMarkedForDeletion = gameEntity;
                 }
             }
@@ -84,11 +86,15 @@ public class Player extends MovableGameEntity {
 
     public void handleKeyInput(Keys key) {
         Point proposedPosition = null;
-
         switch (key) {
             case A:
-                entityState = EntityState.ATTACK;
-                this.timer = new Timer(ATTACK_TIMEOUT);
+                if(entityState == EntityState.IDLE || entityState == EntityState.INVINCIBLE){
+                    entityState = EntityState.ATTACK;
+                    attackTimer = new Timer(ATTACK_TIMEOUT);
+                }
+                else if (entityState == EntityState.COOLDOWN){
+                    break;
+                }
                 break;
             case LEFT:
                 proposedPosition = getXShiftedLocation(-this.speed);
@@ -105,7 +111,6 @@ public class Player extends MovableGameEntity {
             default:
                 break;
         }
-
         if (key == Keys.A) return;
         if (withinBounds(proposedPosition) && !super.collidesWithGameEntity(proposedPosition, "WALL",
                 "TREE")) this.updatePlayerPos(proposedPosition);
@@ -119,7 +124,7 @@ public class Player extends MovableGameEntity {
         this.speed = PLAYER_SPEED;
         this.setImage(FAE_RIGHT);
         this.setName("Fae");
-        health = new HealthCalculator(this.healthPoints, this.toString());
+        health = new HealthCalculator(this.healthPoints, this.getName());
         this.entityState = EntityState.IDLE;
     }
 
@@ -128,19 +133,22 @@ public class Player extends MovableGameEntity {
     }
 
     public void onFrameUpdate() {
-        if (this.entityState == EntityState.ATTACK) {
-            if (this.timer.isTimeUp()) {
-                this.entityState = EntityState.IDLE;
-                this.timer = new Timer(COOLDOWN_TIMEOUT);
-            }
-        } else if (this.entityState == EntityState.INVINCIBLE) {
-            if (this.timer.isTimeUp()) this.entityState = EntityState.IDLE;
-        }
-    }
+        if (this.timer != null) {
+            this.timer.onFrameUpdate();
 
-    @Override
-    public String toString() {
-        return "Fae";
+            if (this.entityState == EntityState.ATTACK) {
+                if (attackTimer.isTimeUp()) {
+                    this.entityState = EntityState.COOLDOWN;
+                    cooldownTimer = new Timer(COOLDOWN_TIMEOUT);
+                }
+            }
+            else if (this.entityState == EntityState.COOLDOWN) {
+                if (cooldownTimer.isTimeUp()) entityState = EntityState.IDLE;
+            }
+            else if (this.entityState == EntityState.INVINCIBLE) {
+                if (invincibleTimer.isTimeUp()) this.entityState = EntityState.IDLE;
+            }
+        }
     }
 
     @Override

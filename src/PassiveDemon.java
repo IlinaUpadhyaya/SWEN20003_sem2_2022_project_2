@@ -12,11 +12,12 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
     private HealthCalculator health;
     private EntityState entityState;
     private FlameThrower flameThrower;
+    Timer timer;
 
     public PassiveDemon(double xCoOrd, double yCoOrd) {
-        super(new Point(xCoOrd, yCoOrd), PASSIVE_DEMON_IMAGE, "PASSIVEDEMON", FIRE_DAMAGE);
+        super(new Point(xCoOrd, yCoOrd), PASSIVE_DEMON_IMAGE, "Demon", FIRE_DAMAGE);
         this.maxHealthPoints = 40;
-        health = new HealthCalculator(this.maxHealthPoints, "PassiveDemon");
+        health = new HealthCalculator(this.maxHealthPoints, "Demon");
         flameThrower = new FlameThrower(PASSIVE_DEMON_FIRE, this.attackRadius);
         this.entityState = EntityState.ATTACK;
     }
@@ -27,7 +28,13 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
     }
 
     public void onFrameUpdate(Rectangle playerBox) {
+        if (this.timer != null) {
+            this.timer.onFrameUpdate();
+        }
         flameThrower.checkForFire(super.getBoundingBox(), playerBox);
+        if (this.entityState == EntityState.INVINCIBLE) {
+            if (timer.isTimeUp()) this.entityState = EntityState.ATTACK;
+        }
     }
 
     @Override
@@ -36,6 +43,7 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
             this.health.onDamage(damage, damagingEntity);
         } else {
             this.entityState = EntityState.INVINCIBLE;
+            timer = new Timer(INVINCIBLE_TIMEOUT);
         }
         return this.health.healthOver();
     }
@@ -43,11 +51,6 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
     @Override
     public boolean healthOver() {
         return this.health.healthOver();
-    }
-
-    @Override
-    public String toString() {
-        return "Demon";
     }
 
     @Override

@@ -21,13 +21,13 @@ public class GameSceneTwo extends GameScene {
         TITLE_FONT.drawString("SHADOW DIMENSION", TITLE_MSG_LOC.x,
                 TITLE_MSG_LOC.y);
         MSG_FONT.drawString("PRESS SPACE TO START",
-                MSG_XSHIFT + TITLE_MSG_LOC.x, MSG_YSHIFT + TITLE_MSG_LOC.y);
+                MSG_X_SHIFT + TITLE_MSG_LOC.x, MSG_Y_SHIFT + TITLE_MSG_LOC.y);
         MSG_FONT.drawString("PRESS A TO ATTACK",
-                MSG_XSHIFT + TITLE_MSG_LOC.x,
-                MSG_YSHIFT + TITLE_MSG_LOC.y + LINE_SEPARATION);
+                MSG_X_SHIFT + TITLE_MSG_LOC.x,
+                MSG_Y_SHIFT + TITLE_MSG_LOC.y + LINE_SEPARATION);
         MSG_FONT.drawString("DEFEAT NAVEC TO WIN",
-                MSG_XSHIFT + TITLE_MSG_LOC.x,
-                MSG_YSHIFT * 2 + TITLE_MSG_LOC.y + LINE_SEPARATION);
+                MSG_X_SHIFT + TITLE_MSG_LOC.x,
+                MSG_Y_SHIFT * 2 + TITLE_MSG_LOC.y + LINE_SEPARATION);
     }
 
     @Override
@@ -48,7 +48,8 @@ public class GameSceneTwo extends GameScene {
 
     @Override
     protected void drawWinScreen() {
-
+        TITLE_FONT.drawString("CONGRATULATIONS!", TITLE_MSG_LOC.x,
+                (MSG_Y_SHIFT - MSG_X_SHIFT) + TITLE_MSG_LOC.y);
     }
 
     @Override

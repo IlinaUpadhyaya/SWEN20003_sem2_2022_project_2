@@ -1,3 +1,3 @@
 public enum EntityState {
-    IDLE, ATTACK, INVINCIBLE
+    IDLE, ATTACK, INVINCIBLE, COOLDOWN
 }

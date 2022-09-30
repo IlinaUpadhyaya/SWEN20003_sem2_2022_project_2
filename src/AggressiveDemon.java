@@ -7,7 +7,8 @@ import java.util.Random;
 
 public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour {
     private Direction direction;
-    protected double attackRadius = 150;
+    private static final double FIRE_DAMAGE = 10;
+    protected double attackRadius;
     protected FlameThrower flameThrower;
     private Random randomizer = new Random();
     protected Image leftImage, rightImage, leftInvincibleImage, rightInvincibleImage, fireImage;
@@ -16,25 +17,23 @@ public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour
         super(new Point(xCoOrd, yCoOrd));
         this.leftImage = new Image("res/demon/demonLeft.png");
         this.rightImage = new Image("res/demon/demonRight.png");
-        this.leftInvincibleImage = new Image("res/demon/demonInvincibleLeft" +
-                ".png");
-        this.rightInvincibleImage = new Image("res/demon" +
-                "/demonInvincibleRight.png");
-        this.setImage(this.rightImage); /*else no image set*/
-        this.setName("AggressiveDemon");
-        this.setDamage(20);
+        this.leftInvincibleImage = new Image("res/demon/demonInvincibleLeft.png");
+        this.rightInvincibleImage = new Image("res/demon/demonInvincibleRight.png");
+        this.setImage(this.rightImage); // else no image set
+        this.setName("Demon");
+        this.setDamage(FIRE_DAMAGE);
         this.fireImage = new Image("res/demon/demonFire.png");
         this.attackRadius = 150;
         this.healthPoints = 40;
 
         this.randomizeStateVariables();
-        this.health = new HealthCalculator(this.healthPoints, "AggressiveDemon");
+        this.health = new HealthCalculator(this.healthPoints, "Demon");
         this.flameThrower = new FlameThrower(this.fireImage, this.attackRadius);
         this.entityState = EntityState.ATTACK;
     }
 
     protected void randomizeStateVariables() {
-        int randomNum = randomizer.nextInt(4);
+        int randomNum = randomizer.nextInt(2);
         switch (randomNum) {
             case 0:
                 this.direction = Direction.UP;
@@ -101,6 +100,9 @@ public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour
     }
 
     public void onFrameUpdate(Rectangle playerBox) {
+        if (this.timer != null) {
+            this.timer.onFrameUpdate();
+        }
         flameThrower.checkForFire(super.getBoundingBox(), playerBox);
         Point proposedPoint = getProposedLocation();
         if (proposedPoint == null) {
@@ -114,6 +116,13 @@ public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour
         } else {
             super.recalculateParameters(proposedPoint);
         }
+        if (this.entityState == EntityState.INVINCIBLE) {
+            if (this.timer.isTimeUp()) {
+                this.entityState = EntityState.ATTACK;
+                if (this.direction == Direction.LEFT) this.setImage(this.leftImage);
+                else this.setImage(this.rightImage);
+            }
+        }
     }
 
     @Override
@@ -122,19 +131,16 @@ public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour
             return this.healthOver();
         }
         this.entityState = EntityState.INVINCIBLE;
+        this.timer = new Timer(INVINCIBLE_TIMEOUT);
         if (this.direction == Direction.LEFT) this.setImage(this.leftInvincibleImage);
         else this.setImage(this.rightInvincibleImage);
+        this.health.onDamage(damage, damagingClass);
         return this.health.healthOver();
     }
 
     @Override
     public boolean healthOver() {
         return this.health.healthOver();
-    }
-
-    @Override
-    public String toString() {
-        return "Demon";
     }
 
     @Override

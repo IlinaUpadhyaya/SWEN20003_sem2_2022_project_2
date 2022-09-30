@@ -18,10 +18,10 @@ public class GameSceneOne extends GameScene {
         TITLE_FONT.drawString("SHADOW DIMENSION", TITLE_MSG_LOC.x,
                 TITLE_MSG_LOC.y);
         MSG_FONT.drawString("PRESS SPACE TO START",
-                MSG_XSHIFT + TITLE_MSG_LOC.x, MSG_YSHIFT + TITLE_MSG_LOC.y);
+                MSG_X_SHIFT + TITLE_MSG_LOC.x, MSG_Y_SHIFT + TITLE_MSG_LOC.y);
         MSG_FONT.drawString("USE ARROW KEYS TO FIND GATE",
-                MSG_XSHIFT + TITLE_MSG_LOC.x,
-                MSG_YSHIFT + TITLE_MSG_LOC.y + LINE_SEPARATION);
+                MSG_X_SHIFT + TITLE_MSG_LOC.x,
+                MSG_Y_SHIFT + TITLE_MSG_LOC.y + LINE_SEPARATION);
     }
 
     @Override
@@ -34,14 +34,14 @@ public class GameSceneOne extends GameScene {
 
     @Override
     protected void drawLoseScreen() {
-        TITLE_FONT.drawString("GAME OVER!", TITLE_MSG_LOC.x,
-                TITLE_MSG_LOC.y);
+        TITLE_FONT.drawString("GAME OVER!", MSG_X_SHIFT + TITLE_MSG_LOC.x,
+                (MSG_Y_SHIFT - MSG_X_SHIFT) + TITLE_MSG_LOC.y);
     }
 
     @Override
     protected void drawWinScreen() {
-        TITLE_FONT.drawString("CONGRATULATIONS!", TITLE_MSG_LOC.x,
-                TITLE_MSG_LOC.y);
+        TITLE_FONT.drawString("LEVEL COMPLETE!", TITLE_MSG_LOC.x,
+                (MSG_Y_SHIFT - MSG_X_SHIFT) + TITLE_MSG_LOC.y);
     }
 
     protected void populateSceneEntities(String fileName) {

@@ -9,8 +9,8 @@ public abstract class GameScene {
     protected static final Font TITLE_FONT = new Font("res/frostbite.ttf", 75);
     protected static final Font MSG_FONT = new Font("res/frostbite.ttf", 40);
     protected static final Point TITLE_MSG_LOC = new Point(260, 250);
-    protected static final int MSG_XSHIFT = 90;
-    protected static final int MSG_YSHIFT = 190;
+    protected static final int MSG_X_SHIFT = 90;
+    protected static final int MSG_Y_SHIFT = 190;
     protected static final int LINE_SEPARATION = 60;
     protected static final double SINKHOLE_DAMAGE = 30;
 

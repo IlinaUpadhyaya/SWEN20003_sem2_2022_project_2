@@ -8,8 +8,11 @@ public class Timer {
     }
 
     public boolean isTimeUp() {
+        return this.msRemaining <= 0;
+    }
+
+    public void onFrameUpdate() {
         // must be called every update
         this.msRemaining -= MS_PERSEC / REFRESH_RATE;
-        return this.msRemaining <= 0;
     }
 }
