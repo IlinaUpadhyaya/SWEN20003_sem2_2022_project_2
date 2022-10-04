@@ -18,15 +18,12 @@ public class GameSceneTwo extends GameScene {
 
     @Override
     protected void drawStartScreen() {
-        TITLE_FONT.drawString("SHADOW DIMENSION", TITLE_MSG_LOC.x,
-                TITLE_MSG_LOC.y);
-        MSG_FONT.drawString("PRESS SPACE TO START",
-                MSG_X_SHIFT + TITLE_MSG_LOC.x, MSG_Y_SHIFT + TITLE_MSG_LOC.y);
-        MSG_FONT.drawString("PRESS A TO ATTACK",
-                MSG_X_SHIFT + TITLE_MSG_LOC.x,
+        TITLE_FONT.drawString("SHADOW DIMENSION", TITLE_MSG_LOC.x, TITLE_MSG_LOC.y);
+        MSG_FONT.drawString("PRESS SPACE TO START", MSG_X_SHIFT + TITLE_MSG_LOC.x,
+                MSG_Y_SHIFT + TITLE_MSG_LOC.y);
+        MSG_FONT.drawString("PRESS A TO ATTACK", MSG_X_SHIFT + TITLE_MSG_LOC.x,
                 MSG_Y_SHIFT + TITLE_MSG_LOC.y + LINE_SEPARATION);
-        MSG_FONT.drawString("DEFEAT NAVEC TO WIN",
-                MSG_X_SHIFT + TITLE_MSG_LOC.x,
+        MSG_FONT.drawString("DEFEAT NAVEC TO WIN", MSG_X_SHIFT + TITLE_MSG_LOC.x,
                 MSG_Y_SHIFT * 2 + TITLE_MSG_LOC.y + LINE_SEPARATION);
     }
 
@@ -67,8 +64,7 @@ public class GameSceneTwo extends GameScene {
         Point bottomRightBound = null;
         // read CSV
         Random coinTosser = new Random();
-        try (BufferedReader br =
-                     new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String text;
             while ((text = br.readLine()) != null) {
                 String[] cells = text.split(",");
@@ -83,21 +79,18 @@ public class GameSceneTwo extends GameScene {
                         gameEntities.add(fae);
                         break;
                     case "Wall":
-                        StationaryGameEntity wall =
-                                new StationaryGameEntity(new Point(xCoord,
-                                        yCoord), WALL, "WALL");
+                        StationaryGameEntity wall = new StationaryGameEntity(new Point(xCoord, yCoord), WALL,
+                                "WALL");
                         gameEntities.add(wall);
                         break;
                     case "Sinkhole":
-                        StationaryGameEntity sinkhole =
-                                new StationaryGameEntity(new Point(xCoord,
-                                        yCoord), SINKHOLE, "SINKHOLE", SINKHOLE_DAMAGE);
+                        StationaryGameEntity sinkhole = new StationaryGameEntity(new Point(xCoord, yCoord), SINKHOLE,
+                                "SINKHOLE", SINKHOLE_DAMAGE);
                         gameEntities.add(sinkhole);
                         break;
                     case "Tree":
-                        StationaryGameEntity tree =
-                                new StationaryGameEntity(new Point(xCoord,
-                                        yCoord), TREE, "TREE", 0);
+                        StationaryGameEntity tree = new StationaryGameEntity(new Point(xCoord, yCoord), TREE,
+                                "TREE", 0);
                         gameEntities.add(tree);
                         break;
                     case "Demon":
