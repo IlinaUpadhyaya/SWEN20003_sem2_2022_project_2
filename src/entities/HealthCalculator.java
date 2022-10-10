@@ -1,18 +1,19 @@
-public class HealthCalculator {
-    private double maxHealth;
+package entities;
+
+class HealthCalculator {
+    private final double maxHealth;
     private double currentHealthPoints;
     private double remainingHealthPercentage;
+    private final String parentClass;
 
-    private String parentClass;
-
-    public HealthCalculator(double maxHealth, String parentClass) {
+    HealthCalculator(double maxHealth, String parentClass) {
         this.maxHealth = maxHealth;
         this.currentHealthPoints = maxHealth;
         this.remainingHealthPercentage = 100.0;
         this.parentClass = parentClass;
     }
 
-    public void onDamage(double damage, String damagingClass) {
+    void onDamage(double damage, String damagingClass) {
         this.currentHealthPoints -= damage;
         if (this.currentHealthPoints < 0.0) currentHealthPoints = 0;
         this.remainingHealthPercentage = this.currentHealthPoints / maxHealth * 100.0;
@@ -23,11 +24,11 @@ public class HealthCalculator {
                 (int)maxHealth);
     }
 
-    public boolean healthOver() {
+    boolean healthOver() {
         return currentHealthPoints <= 0;
     }
 
-    public double getRemainingHealthPercentage() {
+    double getRemainingHealthPercentage() {
         return remainingHealthPercentage;
     }
 }

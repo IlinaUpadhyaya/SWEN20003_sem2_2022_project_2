@@ -1,18 +1,19 @@
-import bagel.Keys;
+package entities;
+
 import bagel.util.Point;
 import bagel.util.Rectangle;
+import utils.Timer;
 
 import java.util.ArrayList;
 
 public abstract class MovableGameEntity extends StationaryGameEntity {
     protected Point topLeft, bottomRight;
     protected ArrayList<StationaryGameEntity> gameEntities;
-    protected double healthPoints, speed;
-    protected HealthCalculator health;
+    protected double speed;
     protected Timer timer;
     protected EntityState entityState;
 
-    public MovableGameEntity(Point position) {
+    MovableGameEntity(Point position) {
         super(position);
     }
 
@@ -34,13 +35,7 @@ public abstract class MovableGameEntity extends StationaryGameEntity {
     }
 
     protected boolean collidesWithGameEntity(Point proposedPos, String... gameEntityNames) {
-        Point centerPos = super.getCenterPosition();
-        Point topLeft = super.getTopLeftPosition();
-        double xShift = proposedPos.x - topLeft.x;
-        double yShift = proposedPos.y - topLeft.y;
-        Point newCenter = new Point(centerPos.x + xShift,
-                centerPos.y + yShift);
-        Rectangle boundingBox = super.getImage().getBoundingBoxAt(newCenter);
+        Rectangle boundingBox = this.getBoundingBoxAt(proposedPos);
         boolean collides = false;
         outer:
         for (String entityName : gameEntityNames) {
@@ -54,22 +49,5 @@ public abstract class MovableGameEntity extends StationaryGameEntity {
             }
         }
         return collides;
-    }
-
-    public void adjustTimeScale(Keys key) {
-        switch (key) {
-            case K:
-                this.speed -= this.speed / 2;
-                if (this.speed < -3.0) speed = -3.0;
-                System.out.printf("Slowed down, Speed: %f\n", this.speed);
-                break;
-            case L:
-                this.speed += this.speed / 2;
-                if (this.speed > 3.0) speed = 3.0;
-                System.out.printf("Sped up, Speed: %f\n", this.speed);
-                break;
-            default:
-                break;
-        }
     }
 }

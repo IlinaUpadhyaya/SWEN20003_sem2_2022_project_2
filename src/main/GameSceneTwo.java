@@ -1,30 +1,56 @@
+package main;
+
 import bagel.Image;
 import bagel.Keys;
 import bagel.Window;
 import bagel.util.Point;
+import entities.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Random;
 
-public class GameSceneTwo extends GameScene {
-    private final Image BACKGROUND_IMAGE2 = new Image("res/background1.png");
-
+class GameSceneTwo extends GameScene {
     protected static final Image TREE = new Image("res/tree.png");
+    private final static String INSTRUCTION_MESSAGE_LINE2 = "PRESS A To ATTACK";
+    private final static String INSTRUCTION_MESSAGE_LINE3 = "DEFEAT NAVEC TO WIN";
+    private final Image BACKGROUND_IMAGE2 = new Image("res/background1.png");
+    private final static String WIN_MESSAGE2 = "CONGRATULATIONS!";
+    private int timeScale = 0;
 
     public GameSceneTwo(String fileName) {
         super(fileName);
     }
 
     @Override
+    public void onKeyInput(Keys key) {
+        switch (key) {
+            // apply speed change to all movable enemies
+            case K:
+            case L:
+                adjustTimeScale(key);
+                for (StationaryGameEntity gameEntity : this.gameEntities) {
+                    if (gameEntity instanceof Player) continue;
+                    if (gameEntity instanceof AggressiveDemon) {
+                        ((AggressiveDemon) gameEntity).updateSpeed(this.timeScale);
+                    }
+                }
+                break;
+            // all other key inputs are passed to the player
+            default:
+                fae.handleKeyInput(key);
+                break;
+        }
+    }
+
+    @Override
     protected void drawStartScreen() {
-        TITLE_FONT.drawString("SHADOW DIMENSION", TITLE_MSG_LOC.x, TITLE_MSG_LOC.y);
-        MSG_FONT.drawString("PRESS SPACE TO START", MSG_X_SHIFT + TITLE_MSG_LOC.x,
-                MSG_Y_SHIFT + TITLE_MSG_LOC.y);
-        MSG_FONT.drawString("PRESS A TO ATTACK", MSG_X_SHIFT + TITLE_MSG_LOC.x,
-                MSG_Y_SHIFT + TITLE_MSG_LOC.y + LINE_SEPARATION);
-        MSG_FONT.drawString("DEFEAT NAVEC TO WIN", MSG_X_SHIFT + TITLE_MSG_LOC.x,
-                MSG_Y_SHIFT * 2 + TITLE_MSG_LOC.y + LINE_SEPARATION);
+        TITLE_FONT.drawString(GAME_TITLE, TITLE_X, TITLE_Y);
+        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE1, TITLE_X + INS_X_OFFSET, TITLE_Y + INS_Y_OFFSET);
+        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE2, TITLE_X + INS_X_OFFSET, TITLE_Y + INS_Y_OFFSET
+                + LINE_SEPARATION);
+        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE3, TITLE_X + INS_X_OFFSET,
+                TITLE_Y + INS_Y_OFFSET + LINE_SEPARATION + LINE_SEPARATION);
     }
 
     @Override
@@ -32,27 +58,18 @@ public class GameSceneTwo extends GameScene {
         for (DemonBehaviour enemy : enemies)
             enemy.onFrameUpdate(fae.getBoundingBox());
         fae.onFrameUpdate();
-        BACKGROUND_IMAGE2.draw(Window.getWidth() / 2.0,
-                Window.getHeight() / 2.0);
+        BACKGROUND_IMAGE2.draw(Window.getWidth() / 2.0, Window.getHeight() / 2.0);
         for (StationaryGameEntity drawable : gameEntities)
             drawable.draw();
-    }
-
-    @Override
-    protected void drawLoseScreen() {
-
-    }
-
-    @Override
-    protected void drawWinScreen() {
-        TITLE_FONT.drawString("CONGRATULATIONS!", TITLE_MSG_LOC.x,
-                (MSG_Y_SHIFT - MSG_X_SHIFT) + TITLE_MSG_LOC.y);
     }
 
     @Override
     protected boolean win() {
         return this.mainEnemy.healthOver();
     }
+
+    @Override
+    protected void drawWinScreen() {drawMessage(WIN_MESSAGE2);}
 
     @Override
     protected boolean lose() {
@@ -64,7 +81,8 @@ public class GameSceneTwo extends GameScene {
         Point bottomRightBound = null;
         // read CSV
         Random coinTosser = new Random();
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader br =
+                     new BufferedReader(new FileReader(fileName))) {
             String text;
             while ((text = br.readLine()) != null) {
                 String[] cells = text.split(",");
@@ -79,18 +97,21 @@ public class GameSceneTwo extends GameScene {
                         gameEntities.add(fae);
                         break;
                     case "Wall":
-                        StationaryGameEntity wall = new StationaryGameEntity(new Point(xCoord, yCoord), WALL,
-                                "WALL");
+                        StationaryGameEntity wall =
+                                new StationaryGameEntity(new Point(xCoord,
+                                        yCoord), WALL, "WALL");
                         gameEntities.add(wall);
                         break;
                     case "Sinkhole":
-                        StationaryGameEntity sinkhole = new StationaryGameEntity(new Point(xCoord, yCoord), SINKHOLE,
-                                "SINKHOLE", SINKHOLE_DAMAGE);
+                        StationaryGameEntity sinkhole =
+                                new StationaryGameEntity(new Point(xCoord,
+                                        yCoord), SINKHOLE, "SINKHOLE", SINKHOLE_DAMAGE);
                         gameEntities.add(sinkhole);
                         break;
                     case "Tree":
-                        StationaryGameEntity tree = new StationaryGameEntity(new Point(xCoord, yCoord), TREE,
-                                "TREE", 0);
+                        StationaryGameEntity tree =
+                                new StationaryGameEntity(new Point(xCoord,
+                                        yCoord), TREE, "TREE", 0);
                         gameEntities.add(tree);
                         break;
                     case "Demon":
@@ -135,22 +156,23 @@ public class GameSceneTwo extends GameScene {
         }
     }
 
-    @Override
-    public void onKeyInput(Keys key) {
+    private void adjustTimeScale(Keys key) {
         switch (key) {
-            // implement speed change onto all moving enemies
             case K:
-            case L:
-                for (StationaryGameEntity gameEntity : this.gameEntities) {
-                    if (gameEntity instanceof Player) continue;
-                    if (gameEntity instanceof AggressiveDemon) {
-                        ((AggressiveDemon) gameEntity).adjustTimeScale(key);
-                    }
+                this.timeScale -= 1;
+                if (this.timeScale < -3) {
+                    this.timeScale = -3;
                 }
+                System.out.printf("Slowed down, Speed:  %d\n", this.timeScale);
                 break;
-
+            case L:
+                this.timeScale += 1;
+                if (this.timeScale > 3) {
+                    this.timeScale = 3;
+                }
+                System.out.printf("Sped up, Speed:  %d\n", this.timeScale);
+                break;
             default:
-                fae.handleKeyInput(key);
                 break;
         }
     }

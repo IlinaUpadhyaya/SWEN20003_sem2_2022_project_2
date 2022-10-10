@@ -1,4 +1,6 @@
-public enum GameState {
+package main;
+
+enum GameState {
     LEVEL_1_ANNOUNCED,
     LEVEL_1_STARTED,
     LEVEL_1_WIN,

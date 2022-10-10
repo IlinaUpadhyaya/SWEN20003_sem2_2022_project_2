@@ -1,3 +1,5 @@
+package entities;
+
 import bagel.Font;
 import bagel.util.Rectangle;
 

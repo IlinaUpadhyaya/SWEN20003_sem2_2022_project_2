@@ -1,4 +1,10 @@
-import bagel.*;
+package main;
+
+import bagel.AbstractGame;
+import bagel.Input;
+import bagel.Keys;
+import bagel.Window;
+import utils.Timer;
 
 import java.util.ArrayList;
 
@@ -9,19 +15,18 @@ import java.util.ArrayList;
  */
 
 public class ShadowDimension extends AbstractGame {
-    // CONSTANTS
+    private final static String GAME_TITLE = "SHADOW DIMENSION";
     private final static int WINDOW_WIDTH = 1024;
     private final static int WINDOW_HEIGHT = 768;
-    private final static String GAME_TITLE = "SHADOW DIMENSION";
-    private final String WORLD_FILE1 = "res/level0.csv";
-    private final String WORLD_FILE2 = "res/level1.csv";
-    private final int LEVEL1_WIN_DISPLAY_TIME = 3000;
-    private final ArrayList<Keys> POSSIBLE_KEYS = new ArrayList<Keys>();
-
-    // private VARIABLES
+    private final static String WORLD_FILE1 = "res/level0.csv";
+    private final static String WORLD_FILE2 = "res/level1.csv";
+    private final static int LEVEL1_WIN_DISPLAY_TIME = 3000;
+    private final static ArrayList<Keys> POSSIBLE_KEYS = new ArrayList<Keys>();
     private GameState gameState;
     private Timer timer;
-    private GameScene activeLevel, levelOne, levelTwo;
+    private GameScene activeLevel;
+    private final GameScene levelOne;
+    private final GameScene levelTwo;
 
     public ShadowDimension() {
         super(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE);
@@ -30,6 +35,61 @@ public class ShadowDimension extends AbstractGame {
         levelTwo = new GameSceneTwo(WORLD_FILE2);
         this.gameState = GameState.LEVEL_1_ANNOUNCED;
         this.activeLevel = levelOne;
+    }
+
+    /**
+     * The entry point for the program.
+     */
+    public static void main(String[] args) {
+        ShadowDimension game = new ShadowDimension();
+        game.run();
+    }
+
+    /**
+     * draws, updates game state and exits game when the escape key is pressed.
+     */
+    @Override
+    protected void update(Input input) {
+        this.handleUserInput(input);
+        this.checkForWinLose();
+        // now draw
+        switch (this.gameState) {
+            case LEVEL_1_ANNOUNCED:
+                levelOne.drawStartScreen();
+                break;
+
+            case LEVEL_1_STARTED:
+                levelOne.drawGameScreen();
+                break;
+
+            case LEVEL_1_WIN:
+                if (this.timer == null) break;
+                this.timer.clockTick();
+                if (this.timer.isTimeUp()) this.gameState =
+                        GameState.LEVEL_2_ANNOUNCED;
+                else
+                    levelOne.drawWinScreen();
+                break;
+
+            case LEVEL_2_ANNOUNCED:
+                levelTwo.drawStartScreen();
+                break;
+
+            case LEVEL_2_STARTED:
+                levelTwo.drawGameScreen();
+                break;
+
+            case LEVEL_2_WIN:
+                levelTwo.drawWinScreen();
+                break;
+
+            case GAME_LOSE:
+                levelOne.drawLoseScreen();
+                break;
+
+            default:
+                break;
+        }
     }
 
     private void initKeys() {
@@ -47,7 +107,7 @@ public class ShadowDimension extends AbstractGame {
 
     private Keys getKeyPress(Input input) {
         Keys keyPressed = null;
-        for (Keys key : this.POSSIBLE_KEYS)
+        for (Keys key : POSSIBLE_KEYS)
             if (input.wasPressed(key)) {
                 keyPressed = key;
                 break;
@@ -80,8 +140,6 @@ public class ShadowDimension extends AbstractGame {
                 activeLevel.onKeyInput(Keys.UP);
             if (input.isDown(Keys.DOWN))
                 activeLevel.onKeyInput(Keys.DOWN);
-            if (input.isDown(Keys.A))
-                activeLevel.onKeyInput(Keys.A);
             return;
         }
 
@@ -126,62 +184,5 @@ public class ShadowDimension extends AbstractGame {
             default:
                 break;
         }
-    }
-
-    /**
-     * draws, updates game state and exits game when the escape key is pressed.
-     */
-    @Override
-    protected void update(Input input) {
-        if (this.timer != null) {
-            this.timer.onFrameUpdate();
-        }
-        this.handleUserInput(input);
-        this.checkForWinLose();
-
-        // now draw
-        switch (this.gameState) {
-            case LEVEL_1_ANNOUNCED:
-                levelOne.drawStartScreen();
-                break;
-
-            case LEVEL_1_STARTED:
-                levelOne.drawGameScreen();
-                break;
-
-            case LEVEL_1_WIN:
-                if (this.timer.isTimeUp()) this.gameState =
-                        GameState.LEVEL_2_ANNOUNCED;
-                else
-                    levelOne.drawWinScreen();
-                break;
-
-            case LEVEL_2_ANNOUNCED:
-                levelTwo.drawStartScreen();
-                break;
-
-            case LEVEL_2_STARTED:
-                levelTwo.drawGameScreen();
-                break;
-
-            case LEVEL_2_WIN:
-                levelTwo.drawWinScreen();
-                break;
-
-            case GAME_LOSE:
-                levelOne.drawLoseScreen();
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    /**
-     * The entry point for the program.
-     */
-    public static void main(String[] args) {
-        ShadowDimension game = new ShadowDimension();
-        game.run();
     }
 }
