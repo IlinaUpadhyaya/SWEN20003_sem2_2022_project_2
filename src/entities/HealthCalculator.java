@@ -2,9 +2,9 @@ package entities;
 
 class HealthCalculator {
     private final double maxHealth;
+    private final String parentClass;
     private double currentHealthPoints;
     private double remainingHealthPercentage;
-    private final String parentClass;
 
     HealthCalculator(double maxHealth, String parentClass) {
         this.maxHealth = maxHealth;
@@ -18,10 +18,9 @@ class HealthCalculator {
         if (this.currentHealthPoints < 0.0) currentHealthPoints = 0;
         this.remainingHealthPercentage = this.currentHealthPoints / maxHealth * 100.0;
 
-        // Log message
-        System.out.printf(damagingClass + " inflicts " + (int)damage + " damage points on " + this.parentClass + ". " +
-                        this.parentClass + "'s current health: %d/%d\n", (int)(Math.round(this.currentHealthPoints)),
-                (int)maxHealth);
+        System.out.printf("%s inflicts %d damage points on %s. %s's current health: %d/%d\n",
+                damagingClass, (int) damage, this.parentClass, this.parentClass,
+                (int) (Math.round(this.currentHealthPoints)), (int) (Math.round(this.maxHealth)));
     }
 
     boolean healthOver() {

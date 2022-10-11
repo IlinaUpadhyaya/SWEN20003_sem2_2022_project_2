@@ -6,11 +6,10 @@ import bagel.util.Rectangle;
 import utils.Timer;
 
 public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour {
-
     private final static Image PASSIVE_DEMON_IMAGE = new Image("res/demon/demonRight.png");
-    private final static Image PASSIVE_DEMON_INVINCIBLE_IMAGE = new Image("res/demon/demoninvincibleRight.png");
+    private final static Image PASSIVE_DEMON_INVINCIBLE_IMAGE = new Image("res/demon/demonInvincibleRight.png");
     private final static Image PASSIVE_DEMON_FIRE = new Image("res/demon/demonFire.png");
-
+    private final static String NAME = "Demon";
     private final static double FIRE_DAMAGE = 10;
     private final static double STARTING_HEALTH = 40;
     private final static double ATTACK_RADIUS = 150;
@@ -20,8 +19,8 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
     private Timer timer = null;
 
     public PassiveDemon(double xCoOrd, double yCoOrd) {
-        super(new Point(xCoOrd, yCoOrd), PASSIVE_DEMON_IMAGE, "Demon", FIRE_DAMAGE);
-        health = new HealthCalculator(STARTING_HEALTH, this.getName());
+        super(new Point(xCoOrd, yCoOrd), PASSIVE_DEMON_IMAGE, NAME, FIRE_DAMAGE);
+        health = new HealthCalculator(STARTING_HEALTH, NAME);
         flameThrower = new FlameThrower(PASSIVE_DEMON_FIRE, ATTACK_RADIUS);
         this.entityState = EntityState.ATTACK;
     }
@@ -57,7 +56,6 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
 
     @Override
     public void draw() {
-        if (disappeared) return;
         super.draw();
         flameThrower.draw();
         HEALTH_BAR_FONT.drawString((int) (Math.round(this.health.getRemainingHealthPercentage())) + "%",

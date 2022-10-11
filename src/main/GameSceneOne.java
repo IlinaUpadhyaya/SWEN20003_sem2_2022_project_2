@@ -4,7 +4,9 @@ import bagel.Image;
 import bagel.Window;
 import bagel.util.Point;
 import entities.Player;
+import entities.Sinkhole;
 import entities.StationaryGameEntity;
+import entities.Wall;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -24,8 +26,8 @@ class GameSceneOne extends GameScene {
     protected void drawStartScreen() {
         TITLE_FONT.drawString(GAME_TITLE, TITLE_X, TITLE_Y);
         INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE1, TITLE_X + INS_X_OFFSET, TITLE_Y + INS_Y_OFFSET);
-        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE2, TITLE_X + INS_X_OFFSET, TITLE_Y +
-                INS_Y_OFFSET + LINE_SEPARATION);
+        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE2, TITLE_X + INS_X_OFFSET,
+                TITLE_Y + INS_Y_OFFSET + LINE_SEPARATION);
     }
 
     @Override
@@ -52,8 +54,9 @@ class GameSceneOne extends GameScene {
     protected void populateSceneEntities(String fileName) {
         Point topLeftBound = null;
         Point bottomRightBound = null;
-        try (BufferedReader br =
-                     new BufferedReader(new FileReader(fileName))) {
+
+        // read CSV
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String text;
             while ((text = br.readLine()) != null) {
                 String[] cells = text.split(",");
@@ -68,16 +71,11 @@ class GameSceneOne extends GameScene {
                         gameEntities.add(fae);
                         break;
                     case "Wall":
-                        StationaryGameEntity wall =
-                                new StationaryGameEntity(new Point(xCoord,
-                                        yCoord), WALL, "WALL", 0);
+                        StationaryGameEntity wall = new Wall(new Point(xCoord, yCoord));
                         gameEntities.add(wall);
                         break;
                     case "Sinkhole":
-                        StationaryGameEntity sinkhole =
-                                new StationaryGameEntity(new Point(xCoord,
-                                        yCoord), SINKHOLE, "SINKHOLE",
-                                        SINKHOLE_DAMAGE);
+                        StationaryGameEntity sinkhole = new Sinkhole(new Point(xCoord, yCoord));
                         gameEntities.add(sinkhole);
                         break;
                     case "TopLeft":

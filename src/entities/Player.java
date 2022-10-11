@@ -22,27 +22,26 @@ public class Player extends MovableGameEntity {
     private final static Image FAE_ATTACK_RIGHT = new Image("res/fae/faeAttackRight.png");
     private final static Image FAE_ATTACK_LEFT = new Image("res/fae/faeAttackLeft.png");
     private final static Font MSG_FONT = new Font("res/frostbite.ttf", FONT_SIZE);
+    private final static String NAME = "Fae";
     private boolean invincible = false;
-    private Timer invinciblityTimer = null;
+    private Timer invincibilityTimer = null;
 
     public Player(double xCoord, double yCoord) {
-        super(new Point(xCoord, yCoord));
-        this.setDamage(PLAYER_DAMAGE_POINTS);
+        super(new Point(xCoord, yCoord), FAE_RIGHT, NAME, PLAYER_DAMAGE_POINTS);
         this.speed = PLAYER_SPEED;
-        this.setImageAndCalculate(FAE_RIGHT);
-        this.setName("Fae");
         health = new HealthCalculator(PLAYER_MAX_HEALTH, this.getName());
         this.entityState = EntityState.IDLE;
     }
 
     public void onFrameUpdate() {
-        if (this.invinciblityTimer != null) {
-            this.invinciblityTimer.clockTick();
-            if (this.invinciblityTimer.isTimeUp()) {
+        if (this.invincibilityTimer != null) {
+            this.invincibilityTimer.clockTick();
+            if (this.invincibilityTimer.isTimeUp()) {
                 this.invincible = false;
-                this.invinciblityTimer = null;
+                this.invincibilityTimer = null;
             }
         }
+
         if (this.timer != null) {
             this.timer.clockTick();
             switch (this.entityState) {
@@ -53,19 +52,21 @@ public class Player extends MovableGameEntity {
                         toggleImage();
                     }
                     break;
+
                 case COOLDOWN:
                     if (this.timer.isTimeUp()) {
                         this.entityState = EntityState.IDLE;
                         this.timer = null;
                     }
+
                 case IDLE:
                     break;
             }
         }
 
-        // do the same check with each enemy and absorb any fire damage
+        // now do the same check with each enemy and absorb any fire damage
         Rectangle playerBoundingBox = getBoundingBox();
-
+        StationaryGameEntity entityMarkedForDeletion = null;
         for (StationaryGameEntity gameEntity : gameEntities) {
             if (gameEntity instanceof DemonBehaviour) {
                 DemonBehaviour demon = (DemonBehaviour) gameEntity;
@@ -73,15 +74,17 @@ public class Player extends MovableGameEntity {
                     health.onDamage(gameEntity.getDamage(),
                             gameEntity.getName());
                     this.invincible = true;
-                    this.invinciblityTimer = new Timer(Player.INVINCIBLE_TIMEOUT);
+                    this.invincibilityTimer = new Timer(Player.INVINCIBLE_TIMEOUT);
                 }
-                if (!gameEntity.disappeared && this.entityState == EntityState.ATTACK &&
+                if (this.entityState == EntityState.ATTACK &&
                         playerBoundingBox.intersects(((StationaryGameEntity) demon).getBoundingBox())) {
-                    gameEntity.disappeared = demon.onAttacked(this.getDamage(),
+                    boolean disappear = demon.onAttacked(this.getDamage(),
                             this.getName());
+                    if (disappear) entityMarkedForDeletion = gameEntity;
                 }
             }
         }
+        if (entityMarkedForDeletion != null) gameEntities.remove(entityMarkedForDeletion);
     }
 
     public void handleKeyInput(Keys key) {
@@ -93,7 +96,7 @@ public class Player extends MovableGameEntity {
                     toggleImage();
                     this.timer = new Timer(ATTACK_TIMEOUT);
                 }
-                break;
+                return;
             case LEFT:
                 proposedPosition = getXShiftedLocation(-this.speed);
                 break;
@@ -109,9 +112,7 @@ public class Player extends MovableGameEntity {
             default:
                 return;
         }
-        if (key == Keys.A) return;
-        if (withinBounds(proposedPosition) && !super.collidesWithGameEntity(proposedPosition, "WALL",
-                "TREE")) {
+        if (withinBounds(proposedPosition) && !super.collidesWithGameEntity(proposedPosition, Wall.NAME, Tree.NAME)) {
             this.updatePlayerPos(proposedPosition);
             checkForSinkholeDamage();
         }
@@ -127,23 +128,27 @@ public class Player extends MovableGameEntity {
     private void toggleImage() {
         if (this.getImage() == Player.FAE_RIGHT) {
             this.setImageAndCalculate(Player.FAE_ATTACK_RIGHT);
-        } else if (this.getImage() == Player.FAE_LEFT) {
+        }
+        else if (this.getImage() == Player.FAE_LEFT) {
             this.setImageAndCalculate(Player.FAE_ATTACK_LEFT);
-        } else if (this.getImage() == Player.FAE_ATTACK_RIGHT) {
+        }
+        else if (this.getImage() == Player.FAE_ATTACK_RIGHT) {
             this.setImageAndCalculate(Player.FAE_RIGHT);
-        } else if (this.getImage() == Player.FAE_ATTACK_LEFT) {
+        }
+        else if (this.getImage() == Player.FAE_ATTACK_LEFT) {
             this.setImageAndCalculate(Player.FAE_LEFT);
         }
     }
 
     private void updatePlayerPos(Point newPos) {
         Point currentPos = super.getTopLeftPosition();
-        if (newPos.x > currentPos.x) {
+        if (newPos.x >= currentPos.x) {
             if (this.entityState == EntityState.ATTACK)
                 super.setImageAndCalculate(FAE_ATTACK_RIGHT);
             else
                 super.setImageAndCalculate(FAE_RIGHT);
-        } else if (newPos.x < currentPos.x) {
+        }
+        else if (newPos.x < currentPos.x) {
             if (this.entityState == EntityState.ATTACK)
                 super.setImageAndCalculate(FAE_ATTACK_LEFT);
             else
@@ -163,16 +168,22 @@ public class Player extends MovableGameEntity {
     }
 
     private void checkForSinkholeDamage() {
-        if (this.invincible) return;
         Rectangle playerBoundingBox = getBoundingBox();
+        StationaryGameEntity entityMarkedForDeletion = null;
+
         for (StationaryGameEntity gameEntity : gameEntities) {
-            if (gameEntity.getName().equals("SINKHOLE") && !gameEntity.disappeared) {
-                StationaryGameEntity sinkhole = gameEntity;
+            if (gameEntity.getName().equals(Sinkhole.NAME)) {
+                Sinkhole sinkhole = (Sinkhole) gameEntity;
                 if (playerBoundingBox.intersects(sinkhole.getBoundingBox())) {
-                    health.onDamage(sinkhole.getDamage(), "Sinkhole");
-                    gameEntity.disappeared = true;
+                    {
+                        if (!this.invincible) {
+                            health.onDamage(sinkhole.getDamage(), Sinkhole.NAME);
+                            entityMarkedForDeletion = gameEntity;
+                        }
+                    }
                 }
             }
         }
+        if (entityMarkedForDeletion != null) gameEntities.remove(entityMarkedForDeletion);
     }
 }

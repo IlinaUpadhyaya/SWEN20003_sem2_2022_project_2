@@ -22,9 +22,6 @@ abstract class GameScene {
     protected final static int INS_X_OFFSET = 90;
     protected final static int INS_Y_OFFSET = 190;
     protected final static int LINE_SEPARATION = 60;
-    protected final static Image WALL = new Image("res/wall.png");
-    protected final static Image SINKHOLE = new Image("res/sinkhole.png");
-    protected final static double SINKHOLE_DAMAGE = 30;
     private final static String END_MESSAGE = "GAME OVER!";
     protected Player fae;
     protected ArrayList<StationaryGameEntity> gameEntities = new ArrayList<StationaryGameEntity>();

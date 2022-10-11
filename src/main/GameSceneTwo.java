@@ -14,7 +14,9 @@ class GameSceneTwo extends GameScene {
     protected static final Image TREE = new Image("res/tree.png");
     private final static String INSTRUCTION_MESSAGE_LINE2 = "PRESS A To ATTACK";
     private final static String INSTRUCTION_MESSAGE_LINE3 = "DEFEAT NAVEC TO WIN";
-    private final Image BACKGROUND_IMAGE2 = new Image("res/background1.png");
+    private final static Image BACKGROUND_IMAGE2 = new Image("res/background1.png");
+    private final static int NO_OF_DEMON_TYPES = 2;
+    private final static int AGGRESSIVE = 0;
     private final static String WIN_MESSAGE2 = "CONGRATULATIONS!";
     private int timeScale = 0;
 
@@ -36,7 +38,7 @@ class GameSceneTwo extends GameScene {
                     }
                 }
                 break;
-            // all other key inputs are passed to the player
+            // all other key inputs passed to the player
             default:
                 fae.handleKeyInput(key);
                 break;
@@ -47,8 +49,8 @@ class GameSceneTwo extends GameScene {
     protected void drawStartScreen() {
         TITLE_FONT.drawString(GAME_TITLE, TITLE_X, TITLE_Y);
         INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE1, TITLE_X + INS_X_OFFSET, TITLE_Y + INS_Y_OFFSET);
-        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE2, TITLE_X + INS_X_OFFSET, TITLE_Y + INS_Y_OFFSET
-                + LINE_SEPARATION);
+        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE2, TITLE_X + INS_X_OFFSET,
+                TITLE_Y + INS_Y_OFFSET + LINE_SEPARATION);
         INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE3, TITLE_X + INS_X_OFFSET,
                 TITLE_Y + INS_Y_OFFSET + LINE_SEPARATION + LINE_SEPARATION);
     }
@@ -79,10 +81,10 @@ class GameSceneTwo extends GameScene {
     protected void populateSceneEntities(String fileName) {
         Point topLeftBound = null;
         Point bottomRightBound = null;
+
         // read CSV
         Random coinTosser = new Random();
-        try (BufferedReader br =
-                     new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String text;
             while ((text = br.readLine()) != null) {
                 String[] cells = text.split(",");
@@ -97,27 +99,21 @@ class GameSceneTwo extends GameScene {
                         gameEntities.add(fae);
                         break;
                     case "Wall":
-                        StationaryGameEntity wall =
-                                new StationaryGameEntity(new Point(xCoord,
-                                        yCoord), WALL, "WALL");
+                        StationaryGameEntity wall = new Wall(new Point(xCoord, yCoord));
                         gameEntities.add(wall);
                         break;
                     case "Sinkhole":
-                        StationaryGameEntity sinkhole =
-                                new StationaryGameEntity(new Point(xCoord,
-                                        yCoord), SINKHOLE, "SINKHOLE", SINKHOLE_DAMAGE);
+                        StationaryGameEntity sinkhole = new Sinkhole(new Point(xCoord, yCoord));
                         gameEntities.add(sinkhole);
                         break;
                     case "Tree":
-                        StationaryGameEntity tree =
-                                new StationaryGameEntity(new Point(xCoord,
-                                        yCoord), TREE, "TREE", 0);
+                        StationaryGameEntity tree = new Tree(new Point(xCoord, yCoord));
                         gameEntities.add(tree);
                         break;
                     case "Demon":
-                        /*randomize type based on coin toss*/
+                        // randomize type based on coin toss
                         StationaryGameEntity demon;
-                        if (coinTosser.nextInt(2) == 1)
+                        if (coinTosser.nextInt(NO_OF_DEMON_TYPES) == AGGRESSIVE)
                             demon = new AggressiveDemon(xCoord, yCoord);
                         else
                             demon = new PassiveDemon(xCoord, yCoord);

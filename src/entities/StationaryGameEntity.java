@@ -14,7 +14,6 @@ public class StationaryGameEntity {
     protected final static int ORANGE_BOUNDARY = 65;
     protected final static int RED_BOUNDARY = 35;
     protected HealthCalculator health;
-    protected boolean disappeared = false;
     private Point topLeftPosition;
     private Image image;
     private Rectangle boundingBox;
@@ -49,7 +48,6 @@ public class StationaryGameEntity {
     }
 
     public void draw() {
-        if (this.disappeared) return;
         this.image.drawFromTopLeft(topLeftPosition.x, topLeftPosition.y);
         if (this.health != null) {
             prepHealthBarForDrawing();
@@ -66,10 +64,6 @@ public class StationaryGameEntity {
 
     String getName() {
         return name;
-    }
-
-    void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -94,11 +88,13 @@ public class StationaryGameEntity {
     }
 
     protected Rectangle getBoundingBoxAt(Point newTopLeft) {
-        return new Rectangle(newTopLeft, this.image.getWidth(), this.image.getHeight());
+        return new Rectangle(newTopLeft, this.image.getWidth(),
+                this.image.getHeight());
     }
 
     private void recalculateBoundingBox() {
-        this.boundingBox = new Rectangle(this.topLeftPosition, this.image.getWidth(), this.image.getHeight());
+        this.boundingBox = new Rectangle(this.topLeftPosition, this.image.getWidth(),
+                this.image.getHeight());
     }
 
     private void prepHealthBarForDrawing() {
@@ -110,4 +106,5 @@ public class StationaryGameEntity {
             COLOUR.setBlendColour(RED);
         }
     }
+
 }
