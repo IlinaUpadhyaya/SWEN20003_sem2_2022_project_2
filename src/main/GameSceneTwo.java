@@ -19,8 +19,9 @@ class GameSceneTwo extends GameScene {
     private final static int AGGRESSIVE = 0;
     private final static String WIN_MESSAGE2 = "CONGRATULATIONS!";
     private int timeScale = 0;
+    private StationaryGameEntity mainEnemy;
 
-    public GameSceneTwo(String fileName) {
+    GameSceneTwo(String fileName) {
         super(fileName);
     }
 
@@ -38,7 +39,7 @@ class GameSceneTwo extends GameScene {
                     }
                 }
                 break;
-            // all other key inputs passed to the player
+            /*all other key inputs passed to player*/
             default:
                 fae.handleKeyInput(key);
                 break;
@@ -56,10 +57,10 @@ class GameSceneTwo extends GameScene {
     }
 
     @Override
-    protected void drawGameScreen() {
-        for (DemonBehaviour enemy : enemies)
-            enemy.onFrameUpdate(fae.getBoundingBox());
-        fae.onFrameUpdate();
+    protected void updateEntitiesAndDrawGameScreen() {
+        // first update all entities for this frame
+        updateEntities();
+        // now draw
         BACKGROUND_IMAGE2.draw(Window.getWidth() / 2.0, Window.getHeight() / 2.0);
         for (StationaryGameEntity drawable : gameEntities)
             drawable.draw();
@@ -67,7 +68,7 @@ class GameSceneTwo extends GameScene {
 
     @Override
     protected boolean win() {
-        return this.mainEnemy.healthOver();
+        return mainEnemy.healthOver();
     }
 
     @Override
@@ -81,9 +82,9 @@ class GameSceneTwo extends GameScene {
     protected void populateSceneEntities(String fileName) {
         Point topLeftBound = null;
         Point bottomRightBound = null;
-
-        // read CSV
         Random coinTosser = new Random();
+
+        // Read CSV
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String text;
             while ((text = br.readLine()) != null) {
@@ -91,46 +92,47 @@ class GameSceneTwo extends GameScene {
                 String entityType = cells[0];
                 double xCoord = Double.parseDouble(cells[1]);
                 double yCoord = Double.parseDouble(cells[2]);
+                Point position = new Point(xCoord, yCoord);
 
                 // create game entities
                 switch (entityType) {
-                    case "Fae":
-                        fae = new Player(xCoord, yCoord);
+                    case Player.NAME:
+                        fae = new Player(position);
                         gameEntities.add(fae);
                         break;
-                    case "Wall":
-                        StationaryGameEntity wall = new Wall(new Point(xCoord, yCoord));
+                    case Wall.NAME:
+                        StationaryGameEntity wall = new Wall(position);
                         gameEntities.add(wall);
                         break;
-                    case "Sinkhole":
-                        StationaryGameEntity sinkhole = new Sinkhole(new Point(xCoord, yCoord));
+                    case Sinkhole.NAME:
+                        StationaryGameEntity sinkhole = new Sinkhole(position);
                         gameEntities.add(sinkhole);
                         break;
-                    case "Tree":
-                        StationaryGameEntity tree = new Tree(new Point(xCoord, yCoord));
+                    case Tree.NAME:
+                        StationaryGameEntity tree = new Tree(position);
                         gameEntities.add(tree);
                         break;
-                    case "Demon":
+                    case PassiveDemon.NAME:
                         // randomize type based on coin toss
                         StationaryGameEntity demon;
                         if (coinTosser.nextInt(NO_OF_DEMON_TYPES) == AGGRESSIVE)
-                            demon = new AggressiveDemon(xCoord, yCoord);
+                            demon = new AggressiveDemon(position);
                         else
-                            demon = new PassiveDemon(xCoord, yCoord);
+                            demon = new PassiveDemon(position);
                         gameEntities.add(demon);
                         enemies.add((DemonBehaviour) demon);
                         break;
-                    case "Navec":
-                        StationaryGameEntity navec = new SpecialAggressiveDemon(xCoord, yCoord);
+                    case SpecialAggressiveDemon.NAME:
+                        StationaryGameEntity navec = new SpecialAggressiveDemon(position);
                         gameEntities.add(navec);
-                        this.mainEnemy = (DemonBehaviour) navec;
-                        enemies.add(this.mainEnemy);
+                        this.mainEnemy = navec;
+                        enemies.add((DemonBehaviour) navec);
                         break;
-                    case "TopLeft":
-                        topLeftBound = new Point(xCoord, yCoord);
+                    case TOP_LEFT:
+                        topLeftBound = position;
                         break;
-                    case "BottomRight":
-                        bottomRightBound = new Point(xCoord, yCoord);
+                    case BOTTOM_RIGHT:
+                        bottomRightBound = position;
                         break;
                     default:
                         break;
@@ -138,34 +140,34 @@ class GameSceneTwo extends GameScene {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error during csv read method. Exiting...");
+            System.out.println(ERROR_MSG);
             System.exit(0);
         }
-        fae.setGameEntities(gameEntities);
-        fae.setBounds(topLeftBound, bottomRightBound);
-        for (DemonBehaviour demon : enemies) {
-            if (demon instanceof MovableGameEntity) {
-                ((MovableGameEntity) demon).setGameEntities(gameEntities);
-                ((MovableGameEntity) demon).setBounds(topLeftBound,
+        for (StationaryGameEntity entity : gameEntities) {
+            if (entity instanceof MovableGameEntity) {
+                ((MovableGameEntity) entity).setGameEntities(gameEntities);
+                ((MovableGameEntity) entity).setBounds(topLeftBound,
                         bottomRightBound);
             }
         }
     }
 
+    private void updateEntities() {
+        for (DemonBehaviour enemy : enemies)
+            enemy.onFrameUpdate(fae.getBoundingBox());
+        fae.onFrameUpdate();
+    }
+
     private void adjustTimeScale(Keys key) {
         switch (key) {
             case K:
+                if (this.timeScale <= -3) break;
                 this.timeScale -= 1;
-                if (this.timeScale < -3) {
-                    this.timeScale = -3;
-                }
                 System.out.printf("Slowed down, Speed:  %d\n", this.timeScale);
                 break;
             case L:
+                if (this.timeScale >= 3) break;
                 this.timeScale += 1;
-                if (this.timeScale > 3) {
-                    this.timeScale = 3;
-                }
                 System.out.printf("Sped up, Speed:  %d\n", this.timeScale);
                 break;
             default:

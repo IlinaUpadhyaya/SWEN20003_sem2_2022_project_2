@@ -7,6 +7,9 @@ import utils.Timer;
 
 import java.util.ArrayList;
 
+/**
+ * Encapsulates general movable functionality used by demons
+ */
 public abstract class MovableGameEntity extends StationaryGameEntity {
     protected Point topLeft, bottomRight;
     protected ArrayList<StationaryGameEntity> gameEntities;
@@ -18,20 +21,28 @@ public abstract class MovableGameEntity extends StationaryGameEntity {
         super(position, image, name, damage);
     }
 
+    /**
+     * called by GameScene to set these params after reading from file
+     * @param topLeft
+     * @param bottomRight
+     */
     public void setBounds(Point topLeft, Point bottomRight) {
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
     }
 
+    /**
+     * we pass the gameEntities array backed list reference so that collissions can be determined
+     * in this class.
+     * @param gameEntities
+     */
     public void setGameEntities(ArrayList<StationaryGameEntity> gameEntities) {
         this.gameEntities = gameEntities;
     }
 
     protected boolean withinBounds(Point proposedPos) {
-        if (proposedPos.x < topLeft.x || proposedPos.x > bottomRight.x ||
-                proposedPos.y < topLeft.y || proposedPos.y > bottomRight.y)
-            return false;
-        return true;
+        return !(proposedPos.x < topLeft.x) && !(proposedPos.x > bottomRight.x) &&
+                !(proposedPos.y < topLeft.y) && !(proposedPos.y > bottomRight.y);
     }
 
     /**/

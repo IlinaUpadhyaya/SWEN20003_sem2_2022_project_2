@@ -18,7 +18,7 @@ class GameSceneOne extends GameScene {
     private final Image BACKGROUND_IMAGE1 = new Image("res/background0.png");
     private final static String WIN_MESSAGE1 = "LEVEL COMPLETE!";
 
-    public GameSceneOne(String fileName) {
+    GameSceneOne(String fileName) {
         super(fileName);
     }
 
@@ -31,8 +31,10 @@ class GameSceneOne extends GameScene {
     }
 
     @Override
-    protected void drawGameScreen() {
+    protected void updateEntitiesAndDrawGameScreen() {
+        // first update player state
         fae.onFrameUpdate();
+        // now draw
         BACKGROUND_IMAGE1.draw(Window.getWidth() / 2.0, Window.getHeight() / 2.0);
         for (StationaryGameEntity drawable : gameEntities)
             drawable.draw();
@@ -55,7 +57,7 @@ class GameSceneOne extends GameScene {
         Point topLeftBound = null;
         Point bottomRightBound = null;
 
-        // read CSV
+        // Read CSV
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String text;
             while ((text = br.readLine()) != null) {
@@ -63,26 +65,27 @@ class GameSceneOne extends GameScene {
                 String entityType = cells[0];
                 double xCoord = Double.parseDouble(cells[1]);
                 double yCoord = Double.parseDouble(cells[2]);
+                Point position = new Point(xCoord, yCoord);
 
                 // create game entities
                 switch (entityType) {
-                    case "Fae":
-                        fae = new Player(xCoord, yCoord);
+                    case Player.NAME:
+                        fae = new Player(position);
                         gameEntities.add(fae);
                         break;
-                    case "Wall":
-                        StationaryGameEntity wall = new Wall(new Point(xCoord, yCoord));
+                    case Wall.NAME:
+                        StationaryGameEntity wall = new Wall(position);
                         gameEntities.add(wall);
                         break;
-                    case "Sinkhole":
-                        StationaryGameEntity sinkhole = new Sinkhole(new Point(xCoord, yCoord));
+                    case Sinkhole.NAME:
+                        StationaryGameEntity sinkhole = new Sinkhole(position);
                         gameEntities.add(sinkhole);
                         break;
-                    case "TopLeft":
-                        topLeftBound = new Point(xCoord, yCoord);
+                    case TOP_LEFT:
+                        topLeftBound = position;
                         break;
-                    case "BottomRight":
-                        bottomRightBound = new Point(xCoord, yCoord);
+                    case BOTTOM_RIGHT:
+                        bottomRightBound = position;
                         break;
                     default:
                         break;
@@ -90,7 +93,7 @@ class GameSceneOne extends GameScene {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error during csv read method. Exiting...");
+            System.out.println(ERROR_MSG);
             System.exit(0);
         }
         fae.setGameEntities(gameEntities);

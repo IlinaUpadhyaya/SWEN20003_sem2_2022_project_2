@@ -1,9 +1,9 @@
 package utils;
 
-    /**
-     * Keeps track of time elapsed vis-à-vis a pre-determined time interval in
-     * milliseconds passed into the constructor
-     */
+/**
+ * Keeps track of time elapsed vis-à-vis a pre-determined time interval in milliseconds passed into
+ * the constructor
+ */
 public class Timer {
     private static final int REFRESH_RATE = 60;
     private static final double MS_PER_SEC = 1000.0;

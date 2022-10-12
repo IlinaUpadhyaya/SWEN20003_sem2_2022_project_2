@@ -5,21 +5,33 @@ import bagel.util.Point;
 import bagel.util.Rectangle;
 import utils.Timer;
 
+/**
+ * Class represents Passive Demon game object
+ */
 public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour {
+    /**
+     * name must match that in the csv file for this entity. This name will print on messages
+     * involving this entity
+     */
+    public final static String NAME = "Demon";
     private final static Image PASSIVE_DEMON_IMAGE = new Image("res/demon/demonRight.png");
     private final static Image PASSIVE_DEMON_INVINCIBLE_IMAGE = new Image("res/demon/demonInvincibleRight.png");
     private final static Image PASSIVE_DEMON_FIRE = new Image("res/demon/demonFire.png");
-    private final static String NAME = "Demon";
     private final static double FIRE_DAMAGE = 10;
     private final static double STARTING_HEALTH = 40;
     private final static double ATTACK_RADIUS = 150;
     private final static int INVINCIBLE_TIMEOUT = 3000;
-    private EntityState entityState;
     private final FlameThrower flameThrower;
+    private EntityState entityState;
     private Timer timer = null;
 
-    public PassiveDemon(double xCoOrd, double yCoOrd) {
-        super(new Point(xCoOrd, yCoOrd), PASSIVE_DEMON_IMAGE, NAME, FIRE_DAMAGE);
+    /**
+     * Constructor
+     *
+     * @param position representing top left co-ordinate of object in the scene
+     */
+    public PassiveDemon(Point position) {
+        super(position, PASSIVE_DEMON_IMAGE, NAME, FIRE_DAMAGE);
         health = new HealthCalculator(STARTING_HEALTH, NAME);
         flameThrower = new FlameThrower(PASSIVE_DEMON_FIRE, ATTACK_RADIUS);
         this.entityState = EntityState.ATTACK;
@@ -31,7 +43,7 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
     }
 
     public void onFrameUpdate(Rectangle playerBox) {
-        // check timer and update state
+        /*check timer and update state*/
         flameThrower.checkForFire(super.getBoundingBox(), playerBox);
         if (this.timer != null) {
             this.timer.clockTick();

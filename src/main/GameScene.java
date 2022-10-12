@@ -1,7 +1,6 @@
 package main;
 
 import bagel.Font;
-import bagel.Image;
 import bagel.Keys;
 import bagel.Window;
 import entities.DemonBehaviour;
@@ -22,28 +21,31 @@ abstract class GameScene {
     protected final static int INS_X_OFFSET = 90;
     protected final static int INS_Y_OFFSET = 190;
     protected final static int LINE_SEPARATION = 60;
+    protected final static String TOP_LEFT = "TopLeft";
+    protected final static String BOTTOM_RIGHT = "BottomRight";
+    protected final static String ERROR_MSG = "Error during csv read method. Exiting...";
     private final static String END_MESSAGE = "GAME OVER!";
     protected Player fae;
     protected ArrayList<StationaryGameEntity> gameEntities = new ArrayList<StationaryGameEntity>();
-    protected ArrayList<DemonBehaviour> enemies = new ArrayList<DemonBehaviour>();
-    protected DemonBehaviour mainEnemy;
+    protected ArrayList<DemonBehaviour> enemies = new ArrayList<>();
 
-    public GameScene(String fileName) {
+    GameScene(String fileName) {
         populateSceneEntities(fileName);
     }
 
-    public void onKeyInput(Keys key) {
+    void onKeyInput(Keys key) {
         fae.handleKeyInput(key);
     }
 
     protected abstract void drawStartScreen();
 
-    protected abstract void drawGameScreen();
+    protected abstract void updateEntitiesAndDrawGameScreen();
 
     protected abstract boolean win();
 
     protected abstract boolean lose();
 
+    /*reads csv file and populates entities*/
     protected abstract void populateSceneEntities(String fileName);
 
     protected void drawLoseScreen() {

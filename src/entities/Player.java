@@ -7,7 +7,15 @@ import bagel.util.Point;
 import bagel.util.Rectangle;
 import utils.Timer;
 
+/**
+ * Class represents Player game object
+ */
 public class Player extends MovableGameEntity {
+    /**
+     * name must match that in the csv file for this entity. This name will print on messages
+     * involving this entity
+     */
+    public final static String NAME = "Fae";
     private final static int HEALTH_X = 20;
     private final static int HEALTH_Y = 25;
     private final static int FONT_SIZE = 30;
@@ -22,23 +30,27 @@ public class Player extends MovableGameEntity {
     private final static Image FAE_ATTACK_RIGHT = new Image("res/fae/faeAttackRight.png");
     private final static Image FAE_ATTACK_LEFT = new Image("res/fae/faeAttackLeft.png");
     private final static Font MSG_FONT = new Font("res/frostbite.ttf", FONT_SIZE);
-    private final static String NAME = "Fae";
     private boolean invincible = false;
-    private Timer invincibilityTimer = null;
+    private Timer invinciblitytimer = null;
 
-    public Player(double xCoord, double yCoord) {
-        super(new Point(xCoord, yCoord), FAE_RIGHT, NAME, PLAYER_DAMAGE_POINTS);
+    /**
+     * Constructor
+     *
+     * @param position representing starting top left co-ordinate of object in the scene
+     */
+    public Player(Point position) {
+        super(position, FAE_RIGHT, NAME, PLAYER_DAMAGE_POINTS);
         this.speed = PLAYER_SPEED;
         health = new HealthCalculator(PLAYER_MAX_HEALTH, this.getName());
         this.entityState = EntityState.IDLE;
     }
 
     public void onFrameUpdate() {
-        if (this.invincibilityTimer != null) {
-            this.invincibilityTimer.clockTick();
-            if (this.invincibilityTimer.isTimeUp()) {
+        if (this.invinciblitytimer != null) {
+            this.invinciblitytimer.clockTick();
+            if (this.invinciblitytimer.isTimeUp()) {
                 this.invincible = false;
-                this.invincibilityTimer = null;
+                this.invinciblitytimer = null;
             }
         }
 
@@ -52,13 +64,11 @@ public class Player extends MovableGameEntity {
                         toggleImage();
                     }
                     break;
-
                 case COOLDOWN:
                     if (this.timer.isTimeUp()) {
                         this.entityState = EntityState.IDLE;
                         this.timer = null;
                     }
-
                 case IDLE:
                     break;
             }
@@ -74,7 +84,7 @@ public class Player extends MovableGameEntity {
                     health.onDamage(gameEntity.getDamage(),
                             gameEntity.getName());
                     this.invincible = true;
-                    this.invincibilityTimer = new Timer(Player.INVINCIBLE_TIMEOUT);
+                    this.invinciblitytimer = new Timer(Player.INVINCIBLE_TIMEOUT);
                 }
                 if (this.entityState == EntityState.ATTACK &&
                         playerBoundingBox.intersects(((StationaryGameEntity) demon).getBoundingBox())) {
@@ -112,7 +122,9 @@ public class Player extends MovableGameEntity {
             default:
                 return;
         }
-        if (withinBounds(proposedPosition) && !super.collidesWithGameEntity(proposedPosition, Wall.NAME, Tree.NAME)) {
+
+        if (withinBounds(proposedPosition) && !super.collidesWithGameEntity(proposedPosition,
+                Wall.NAME, Tree.NAME)) {
             this.updatePlayerPos(proposedPosition);
             checkForSinkholeDamage();
         }
@@ -128,14 +140,11 @@ public class Player extends MovableGameEntity {
     private void toggleImage() {
         if (this.getImage() == Player.FAE_RIGHT) {
             this.setImageAndCalculate(Player.FAE_ATTACK_RIGHT);
-        }
-        else if (this.getImage() == Player.FAE_LEFT) {
+        } else if (this.getImage() == Player.FAE_LEFT) {
             this.setImageAndCalculate(Player.FAE_ATTACK_LEFT);
-        }
-        else if (this.getImage() == Player.FAE_ATTACK_RIGHT) {
+        } else if (this.getImage() == Player.FAE_ATTACK_RIGHT) {
             this.setImageAndCalculate(Player.FAE_RIGHT);
-        }
-        else if (this.getImage() == Player.FAE_ATTACK_LEFT) {
+        } else if (this.getImage() == Player.FAE_ATTACK_LEFT) {
             this.setImageAndCalculate(Player.FAE_LEFT);
         }
     }
@@ -147,14 +156,13 @@ public class Player extends MovableGameEntity {
                 super.setImageAndCalculate(FAE_ATTACK_RIGHT);
             else
                 super.setImageAndCalculate(FAE_RIGHT);
-        }
-        else if (newPos.x < currentPos.x) {
+        } else {
             if (this.entityState == EntityState.ATTACK)
                 super.setImageAndCalculate(FAE_ATTACK_LEFT);
             else
                 super.setImageAndCalculate(FAE_LEFT);
         }
-        super.recalculateParameters(newPos);
+        super.setNewPosition(newPos);
     }
 
     private Point getXShiftedLocation(double xShift) {
@@ -170,7 +178,6 @@ public class Player extends MovableGameEntity {
     private void checkForSinkholeDamage() {
         Rectangle playerBoundingBox = getBoundingBox();
         StationaryGameEntity entityMarkedForDeletion = null;
-
         for (StationaryGameEntity gameEntity : gameEntities) {
             if (gameEntity.getName().equals(Sinkhole.NAME)) {
                 Sinkhole sinkhole = (Sinkhole) gameEntity;

@@ -17,7 +17,7 @@ public class StationaryGameEntity {
     private Point topLeftPosition;
     private Image image;
     private Rectangle boundingBox;
-    private String name;
+    private final String name;
     private double damage;
 
     public StationaryGameEntity(Point position, Image image, String name, double damage) {
@@ -31,10 +31,6 @@ public class StationaryGameEntity {
         this.setImageAndCalculate(image);
     }
 
-    StationaryGameEntity(Point position) {
-        this.topLeftPosition = position;
-    }
-
     public Point getTopLeftPosition() {
         return topLeftPosition;
     }
@@ -43,10 +39,19 @@ public class StationaryGameEntity {
         return this.boundingBox;
     }
 
+    /**
+     * called to determine if win/lose/dissapear
+     *
+     * @return
+     */
     public boolean healthOver() {
         return this.health.healthOver();
     }
 
+    /**
+     * draws the entity image and prepares the health bar variables only as health bar draw is
+     * different for the entities
+     */
     public void draw() {
         this.image.drawFromTopLeft(topLeftPosition.x, topLeftPosition.y);
         if (this.health != null) {
@@ -55,7 +60,8 @@ public class StationaryGameEntity {
     }
 
     /**
-     * sets image and recalculates the bounding box
+     * images change in dynamic entities and the sizes may be different, so we recalculate the
+     * bounding box in each change
      */
     void setImageAndCalculate(Image image) {
         this.image = image;
@@ -70,17 +76,13 @@ public class StationaryGameEntity {
      * sets the new topLeft Position passed in and recalculates the
      * bounding box
      */
-    void recalculateParameters(Point newPos) {
+    void setNewPosition(Point newPos) {
         this.topLeftPosition = newPos;
         this.recalculateBoundingBox();
     }
 
     double getDamage() {
         return this.damage;
-    }
-
-    void setDamage(double damage) {
-        this.damage = damage;
     }
 
     protected Image getImage() {

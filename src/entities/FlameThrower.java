@@ -10,10 +10,9 @@ class FlameThrower {
     private final Image fire;
     private Rectangle boundingBox;
 
-    // top left coordinates of fire
+    // top left co-ordinates of fire and rotation angle in radians
     private double x, y, rotation;
     private boolean firing = false;
-    private FireLocation fireLocation;
 
     FlameThrower(Image fireImage, double attackRadius) {
         this.fire = fireImage;
@@ -32,16 +31,13 @@ class FlameThrower {
         return this.boundingBox;
     }
 
-    /**
-     * these are image center locations
-     */
     void checkForFire(Rectangle enemyBox, Rectangle playerBox) {
-        this.fireLocation = inRange(enemyBox, playerBox);
-        if (this.fireLocation == null) {
+        FireLocation fireLocation = inRange(enemyBox, playerBox);
+        if (fireLocation == null) {
             firing = false;
             return;
         } else firing = true;
-        switch (this.fireLocation) {
+        switch (fireLocation) {
             case TOPLEFT:
                 x = enemyBox.left() - this.fire.getWidth();
                 y = enemyBox.top() - this.fire.getHeight();
@@ -80,9 +76,12 @@ class FlameThrower {
         Point enemyCenter = enemyBox.centre();
         Point playerCenter = playerBox.centre();
         if (distanceBetweenPoints(enemyCenter, playerCenter) > this.attackRadius) return null;
-        if (playerCenter.x <= enemyCenter.x && playerCenter.y <= enemyCenter.y) return FireLocation.TOPLEFT;
-        if (playerCenter.x <= enemyCenter.x && playerCenter.y > enemyCenter.y) return FireLocation.BOTTOMLEFT;
-        if (playerCenter.x > enemyCenter.x && playerCenter.y <= enemyCenter.y) return FireLocation.TOPRIGHT;
+        if (playerCenter.x <= enemyCenter.x && playerCenter.y <= enemyCenter.y)
+            return FireLocation.TOPLEFT;
+        if (playerCenter.x <= enemyCenter.x)
+            return FireLocation.BOTTOMLEFT;
+        if (playerCenter.y <= enemyCenter.y)
+            return FireLocation.TOPRIGHT;
         return FireLocation.BOTTOMRIGHT;
     }
 
