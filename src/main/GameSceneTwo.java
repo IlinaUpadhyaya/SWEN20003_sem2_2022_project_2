@@ -15,9 +15,9 @@ class GameSceneTwo extends GameScene {
     private final static String INSTRUCTION_MESSAGE_LINE2 = "PRESS A To ATTACK";
     private final static String INSTRUCTION_MESSAGE_LINE3 = "DEFEAT NAVEC TO WIN";
     private final static Image BACKGROUND_IMAGE2 = new Image("res/background1.png");
+    private final static String WIN_MESSAGE2 = "CONGRATULATIONS!";
     private final static int NO_OF_DEMON_TYPES = 2;
     private final static int AGGRESSIVE = 0;
-    private final static String WIN_MESSAGE2 = "CONGRATULATIONS!";
     private int timeScale = 0;
     private StationaryGameEntity mainEnemy;
 
@@ -26,7 +26,12 @@ class GameSceneTwo extends GameScene {
     }
 
     @Override
-    public void onKeyInput(Keys key) {
+    protected void drawWinScreen() {
+        drawMessage(WIN_MESSAGE2);
+    }
+
+    @Override
+    protected void onKeyInput(Keys key) {
         switch (key) {
             // apply speed change to all movable enemies
             case K:
@@ -39,7 +44,7 @@ class GameSceneTwo extends GameScene {
                     }
                 }
                 break;
-            /*all other key inputs passed to player*/
+            // all other key inputs passed to player
             default:
                 fae.handleKeyInput(key);
                 break;
@@ -69,14 +74,6 @@ class GameSceneTwo extends GameScene {
     @Override
     protected boolean win() {
         return mainEnemy.healthOver();
-    }
-
-    @Override
-    protected void drawWinScreen() {drawMessage(WIN_MESSAGE2);}
-
-    @Override
-    protected boolean lose() {
-        return fae.healthOver();
     }
 
     protected void populateSceneEntities(String fileName) {
@@ -143,6 +140,8 @@ class GameSceneTwo extends GameScene {
             System.out.println(ERROR_MSG);
             System.exit(0);
         }
+
+        // these are set once at runtime, so they don't have to be passed in each frame update call
         for (StationaryGameEntity entity : gameEntities) {
             if (entity instanceof MovableGameEntity) {
                 ((MovableGameEntity) entity).setGameEntities(gameEntities);

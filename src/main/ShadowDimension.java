@@ -12,8 +12,14 @@ import utils.Timer;
  * iupadhyaya
 
  * The Main class for the application which implements the update method as
- * a state machine. A debugging key code W has been left as is required.
+ * a state machine.
+ * A debugging key code W (for immediate entry into Level2) has been left as is required.
+
+ * The game code has been classified into three packages for neatness and to demonstrate
+ * javadoc code for public members. If all classes are put into one package there would be no
+ * need for any public members/classes other than the main method.
  */
+
 public class ShadowDimension extends AbstractGame {
     private final static String GAME_TITLE = "SHADOW DIMENSION";
     private final static int WINDOW_WIDTH = 1024;
@@ -38,7 +44,7 @@ public class ShadowDimension extends AbstractGame {
     }
 
     /**
-     * The entry point for the program. No args are required
+     * The entry point for the program. No args are required.
      */
     public static void main(String[] args) {
         ShadowDimension game = new ShadowDimension();
@@ -95,7 +101,6 @@ public class ShadowDimension extends AbstractGame {
         }
     }
 
-
     private Keys getInputtedKey(Input input) {
         for (Keys key : COMMAND_KEYS)
             if (input.wasPressed(key)) {
@@ -149,13 +154,11 @@ public class ShadowDimension extends AbstractGame {
                     this.timer = new Timer(LEVEL1_WIN_DISPLAY_TIME);
                 } else if (levelOne.lose()) this.gameState = GameState.GAME_LOSE;
                 break;
-
             case LEVEL_2_STARTED:
                 if (levelTwo.win()) this.gameState =
                         GameState.LEVEL_2_WIN;
                 else if (levelTwo.lose()) this.gameState = GameState.GAME_LOSE;
                 break;
-
             default:
                 break;
         }

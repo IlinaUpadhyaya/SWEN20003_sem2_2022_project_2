@@ -13,7 +13,7 @@ public class Wall extends StationaryGameEntity {
      * involving this entity
      */
     public final static String NAME = "Wall";
-    protected final static Image WALL = new Image("res/wall.png");
+    private final static Image WALL = new Image("res/wall.png");
 
     /**
      * Constructor

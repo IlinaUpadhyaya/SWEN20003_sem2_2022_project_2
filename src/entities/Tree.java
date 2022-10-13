@@ -12,11 +12,10 @@ public class Tree extends StationaryGameEntity {
      * involving this entity
      */
     public final static String NAME = "Tree";
-    protected final static Image TREE = new Image("res/tree.png");
+    private final static Image TREE = new Image("res/tree.png");
 
     /**
      * Constructor
-     *
      * @param position representing top left co-ordinate of object in the scene
      */
     public Tree(Point position) {

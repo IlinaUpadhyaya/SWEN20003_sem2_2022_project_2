@@ -6,6 +6,7 @@ class HealthCalculator {
     private double currentHealthPoints;
     private double remainingHealthPercentage;
 
+
     HealthCalculator(double maxHealth, String parentClassName) {
         this.maxHealth = maxHealth;
         this.currentHealthPoints = maxHealth;

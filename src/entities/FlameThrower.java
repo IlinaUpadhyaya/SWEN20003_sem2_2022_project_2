@@ -37,6 +37,7 @@ class FlameThrower {
             firing = false;
             return;
         } else firing = true;
+
         switch (fireLocation) {
             case TOPLEFT:
                 x = enemyBox.left() - this.fire.getWidth();

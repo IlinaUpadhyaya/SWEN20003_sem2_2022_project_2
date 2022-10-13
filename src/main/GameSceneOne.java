@@ -1,6 +1,7 @@
 package main;
 
 import bagel.Image;
+import bagel.Keys;
 import bagel.Window;
 import bagel.util.Point;
 import entities.Player;
@@ -20,6 +21,15 @@ class GameSceneOne extends GameScene {
 
     GameSceneOne(String fileName) {
         super(fileName);
+    }
+
+    @Override
+    protected void drawWinScreen() {
+        drawMessage(WIN_MESSAGE1);
+    }
+
+    protected void onKeyInput(Keys key) {
+        fae.handleKeyInput(key);
     }
 
     @Override
@@ -43,14 +53,6 @@ class GameSceneOne extends GameScene {
     protected boolean win() {
         Point playerPos = fae.getTopLeftPosition();
         return playerPos.x >= WIN_X && playerPos.y >= WIN_Y;
-    }
-
-    @Override
-    protected void drawWinScreen() {drawMessage(WIN_MESSAGE1);}
-
-    @Override
-    protected boolean lose() {
-        return fae.healthOver();
     }
 
     protected void populateSceneEntities(String fileName) {
@@ -96,6 +98,8 @@ class GameSceneOne extends GameScene {
             System.out.println(ERROR_MSG);
             System.exit(0);
         }
+
+        // these are set once at runtime, so they don't have to be passed in each frame update call
         fae.setGameEntities(gameEntities);
         fae.setBounds(topLeftBound, bottomRightBound);
     }

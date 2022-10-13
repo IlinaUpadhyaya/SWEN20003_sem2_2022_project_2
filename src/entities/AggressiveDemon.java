@@ -12,8 +12,8 @@ import java.util.Random;
  */
 public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour {
     /**
-     * name must match that in the csv file for this entity. This name will print on messages
-     * involving this entity
+     * name must match that in the csv file for this entity. This name will print on damage messages
+     * involving this entity.
      */
     public final static String NAME = "Demon";
     private final static Image AGGRESSIVE_DEMON_RIGHT = new Image("res/demon/demonRight.png");
@@ -31,10 +31,12 @@ public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour
     protected double attackRadius;
     protected FlameThrower flameThrower;
     protected Image leftImage, rightImage, leftInvincibleImage, rightInvincibleImage, fireImage;
-    private Direction direction;
+     private Direction direction;
     private double originalSpeed;
 
-    /*this constructor eventually used by both types of aggressive demons*/
+    /**
+     * this constructor will also be used by the SpecialAggressiveDemon class
+     */
     AggressiveDemon(Point position, Image rightImage, String name, Image leftImage, Image leftInvincibleImage,
                     Image rightInvincibleImage, Image fireImage, double attackRadius, double damage,
                     double startingHealth) {
@@ -160,7 +162,6 @@ public class AggressiveDemon extends MovableGameEntity implements DemonBehaviour
      * and returns the proposed location in the reversed direction.
      */
     private Point getNewPointInReverseDirection() {
-
         switch (direction) {
             case UP:
                 direction = Direction.DOWN;

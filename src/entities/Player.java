@@ -31,7 +31,7 @@ public class Player extends MovableGameEntity {
     private final static Image FAE_ATTACK_LEFT = new Image("res/fae/faeAttackLeft.png");
     private final static Font MSG_FONT = new Font("res/frostbite.ttf", FONT_SIZE);
     private boolean invincible = false;
-    private Timer invinciblitytimer = null;
+    private Timer invincibilityTimer = null;
 
     /**
      * Constructor
@@ -46,11 +46,11 @@ public class Player extends MovableGameEntity {
     }
 
     public void onFrameUpdate() {
-        if (this.invinciblitytimer != null) {
-            this.invinciblitytimer.clockTick();
-            if (this.invinciblitytimer.isTimeUp()) {
+        if (this.invincibilityTimer != null) {
+            this.invincibilityTimer.clockTick();
+            if (this.invincibilityTimer.isTimeUp()) {
                 this.invincible = false;
-                this.invinciblitytimer = null;
+                this.invincibilityTimer = null;
             }
         }
 
@@ -81,10 +81,9 @@ public class Player extends MovableGameEntity {
             if (gameEntity instanceof DemonBehaviour) {
                 DemonBehaviour demon = (DemonBehaviour) gameEntity;
                 if (!this.invincible && playerBoundingBox.intersects(demon.getFireBoundingBox())) {
-                    health.onDamage(gameEntity.getDamage(),
-                            gameEntity.getName());
+                    health.onDamage(gameEntity.getDamage(), gameEntity.getName());
                     this.invincible = true;
-                    this.invinciblitytimer = new Timer(Player.INVINCIBLE_TIMEOUT);
+                    this.invincibilityTimer = new Timer(Player.INVINCIBLE_TIMEOUT);
                 }
                 if (this.entityState == EntityState.ATTACK &&
                         playerBoundingBox.intersects(((StationaryGameEntity) demon).getBoundingBox())) {
@@ -123,8 +122,7 @@ public class Player extends MovableGameEntity {
                 return;
         }
 
-        if (withinBounds(proposedPosition) && !super.collidesWithGameEntity(proposedPosition,
-                Wall.NAME, Tree.NAME)) {
+        if (withinBounds(proposedPosition) && !super.collidesWithGameEntity(proposedPosition, Wall.NAME, Tree.NAME)) {
             this.updatePlayerPos(proposedPosition);
             checkForSinkholeDamage();
         }

@@ -8,24 +8,24 @@ import bagel.util.Rectangle;
 
 public class StationaryGameEntity {
     protected final static DrawOptions COLOUR = new DrawOptions();
-    protected final static Colour GREEN = new Colour(0, 0.8, 0.2);
-    protected final static Colour ORANGE = new Colour(0.9, 0.6, 0);
-    protected final static Colour RED = new Colour(1, 0, 0);
-    protected final static int ORANGE_BOUNDARY = 65;
-    protected final static int RED_BOUNDARY = 35;
+    private final static Colour GREEN = new Colour(0, 0.8, 0.2);
+    private final static Colour ORANGE = new Colour(0.9, 0.6, 0);
+    private final static Colour RED = new Colour(1, 0, 0);
+    private final static int ORANGE_BOUNDARY = 65;
+    private final static int RED_BOUNDARY = 35;
+    private final String name;
     protected HealthCalculator health;
-    private Point topLeftPosition;
+    protected Point topLeftPosition;
     private Image image;
     private Rectangle boundingBox;
-    private final String name;
     private double damage;
 
-    public StationaryGameEntity(Point position, Image image, String name, double damage) {
+    StationaryGameEntity(Point position, Image image, String name, double damage) {
         this(position, image, name);
         this.damage = damage;
     }
 
-    public StationaryGameEntity(Point position, Image image, String name) {
+    StationaryGameEntity(Point position, Image image, String name) {
         this.topLeftPosition = position;
         this.name = name;
         this.setImageAndCalculate(image);
@@ -40,17 +40,17 @@ public class StationaryGameEntity {
     }
 
     /**
-     * called to determine if win/lose/dissapear
+     * called to determine if entity should be deleted if health over.     *
      *
-     * @return
+     * @return healthOver
      */
     public boolean healthOver() {
         return this.health.healthOver();
     }
 
     /**
-     * draws the entity image and prepares the health bar variables only as health bar draw is
-     * different for the entities
+     * draws the entity image and prepares the health bar variables only as health bar location and
+     * size is different for the entities
      */
     public void draw() {
         this.image.drawFromTopLeft(topLeftPosition.x, topLeftPosition.y);
@@ -60,43 +60,31 @@ public class StationaryGameEntity {
     }
 
     /**
-     * images change in dynamic entities and the sizes may be different, so we recalculate the
-     * bounding box in each change
+     * Images change in some stationary and some moving entities and the sizes may be different, so
+     * we recalculate the bounding box on each change
      */
-    void setImageAndCalculate(Image image) {
+    protected void setImageAndCalculate(Image image) {
         this.image = image;
         this.recalculateBoundingBox();
     }
 
-    String getName() {
+    /**
+     * Also called by movable game entity on position change
+     */
+    protected void recalculateBoundingBox() {
+        this.boundingBox = new Rectangle(this.topLeftPosition, this.image.getWidth(), this.image.getHeight());
+    }
+
+    protected String getName() {
         return name;
     }
 
-    /**
-     * sets the new topLeft Position passed in and recalculates the
-     * bounding box
-     */
-    void setNewPosition(Point newPos) {
-        this.topLeftPosition = newPos;
-        this.recalculateBoundingBox();
-    }
-
-    double getDamage() {
+    protected double getDamage() {
         return this.damage;
     }
 
     protected Image getImage() {
         return this.image;
-    }
-
-    protected Rectangle getBoundingBoxAt(Point newTopLeft) {
-        return new Rectangle(newTopLeft, this.image.getWidth(),
-                this.image.getHeight());
-    }
-
-    private void recalculateBoundingBox() {
-        this.boundingBox = new Rectangle(this.topLeftPosition, this.image.getWidth(),
-                this.image.getHeight());
     }
 
     private void prepHealthBarForDrawing() {

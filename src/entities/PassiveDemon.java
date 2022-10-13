@@ -10,12 +10,12 @@ import utils.Timer;
  */
 public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour {
     /**
-     * name must match that in the csv file for this entity. This name will print on messages
-     * involving this entity
+     * name must match that in the csv file for this entity. This name will print on damage messages
+     * involving this entity.
      */
     public final static String NAME = "Demon";
     private final static Image PASSIVE_DEMON_IMAGE = new Image("res/demon/demonRight.png");
-    private final static Image PASSIVE_DEMON_INVINCIBLE_IMAGE = new Image("res/demon/demonInvincibleRight.png");
+    private final static Image PASSIVE_DEMON_INVINCIBLE_IMAGE = new Image("res/demon/demoninvIncibleRight.png");
     private final static Image PASSIVE_DEMON_FIRE = new Image("res/demon/demonFire.png");
     private final static double FIRE_DAMAGE = 10;
     private final static double STARTING_HEALTH = 40;
@@ -43,8 +43,8 @@ public class PassiveDemon extends StationaryGameEntity implements DemonBehaviour
     }
 
     public void onFrameUpdate(Rectangle playerBox) {
-        /*check timer and update state*/
         flameThrower.checkForFire(super.getBoundingBox(), playerBox);
+        // check timer and update state
         if (this.timer != null) {
             this.timer.clockTick();
             if (this.timer.isTimeUp()) {

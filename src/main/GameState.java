@@ -1,5 +1,5 @@
 package main;
-
+/*Could be kept in the GameScene file too*/
 enum GameState {
     LEVEL_1_ANNOUNCED,
     LEVEL_1_STARTED,

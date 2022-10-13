@@ -12,8 +12,8 @@ public class Sinkhole extends StationaryGameEntity {
      * involving this entity
      */
     public final static String NAME = "Sinkhole";
-    protected final static Image SINKHOLE = new Image("res/sinkhole.png");
-    protected final static double SINKHOLE_DAMAGE = 30;
+    private final static Image SINKHOLE = new Image("res/sinkhole.png");
+    private final static double SINKHOLE_DAMAGE = 30;
 
     /**
      * Constructor

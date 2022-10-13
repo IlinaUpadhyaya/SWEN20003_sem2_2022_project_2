@@ -12,7 +12,7 @@ public class SpecialAggressiveDemon extends AggressiveDemon {
      * involving this entity
      */
     public final static String NAME = "Navec";
-    private final static Image SPECIAL_AGGRESSIVE_DEMON_RIGHT = new Image("res/navec/navecRight.png");
+    private final static Image SPECIAL_AGGRESIVE_DEMON_RIGHT = new Image("res/navec/navecRight.png");
     private final static Image SPECIAL_AGGRESSIVE_DEMON_RIGHT_INVINCIBLE =
             new Image("res/navec/navecInvincibleRight.png");
     private final static Image SPECIAL_AGGRESSIVE_DEMON_LEFT = new Image("res/navec/navecLeft.png");
@@ -26,10 +26,10 @@ public class SpecialAggressiveDemon extends AggressiveDemon {
     /**
      * Constructor
      *
-     * @param position representing starting top left co-ordinate of object in the scene
+     * @param position: the starting top left coordinate of the object in the scene
      */
     public SpecialAggressiveDemon(Point position) {
-        super(position, SPECIAL_AGGRESSIVE_DEMON_RIGHT, NAME, SPECIAL_AGGRESSIVE_DEMON_LEFT,
+        super(position, SPECIAL_AGGRESIVE_DEMON_RIGHT, NAME, SPECIAL_AGGRESSIVE_DEMON_LEFT,
                 SPECIAL_AGGRESSIVE_DEMON_LEFT_INVINCIBLE, SPECIAL_AGGRESSIVE_DEMON_RIGHT_INVINCIBLE,
                 SPECIAL_AGGRESSIVE_DEMON_FIRE, ATTACK_RADIUS, FIRE_DAMAGE, STARTING_HEALTH);
     }

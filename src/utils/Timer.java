@@ -1,9 +1,11 @@
 package utils;
 
 /**
- * Keeps track of time elapsed vis-à-vis a pre-determined time interval in milliseconds passed into
- * the constructor
+ * This is a countdown timer. Keeps track of time elapsed using the refresh rate.
+ * The construction parameter is the countdown interval in milliseconds.
+ * The refresh rate must always be correct.
  */
+
 public class Timer {
     private static final int REFRESH_RATE = 60;
     private static final double MS_PER_SEC = 1000.0;
@@ -12,8 +14,8 @@ public class Timer {
     /**
      * argument is the time interval to be monitored
      */
-    public Timer(int milliseconds) {
-        this.msRemaining = milliseconds;
+    public Timer(int countdownMS) {
+        this.msRemaining = countdownMS;
     }
 
     /**
