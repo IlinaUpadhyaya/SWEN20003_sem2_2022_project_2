@@ -11,12 +11,13 @@ import java.io.FileReader;
 import java.util.Random;
 
 class GameSceneTwo extends GameScene {
-    protected static final Image TREE = new Image("res/tree.png");
     private final static String INSTRUCTION_MESSAGE_LINE2 = "PRESS A To ATTACK";
     private final static String INSTRUCTION_MESSAGE_LINE3 = "DEFEAT NAVEC TO WIN";
     private final static Image BACKGROUND_IMAGE2 = new Image("res/background1.png");
     private final static String WIN_MESSAGE2 = "CONGRATULATIONS!";
     private final static int NO_OF_DEMON_TYPES = 2;
+    private final static int INS_X = 350;
+    private final static int INS_Y = 350;
     private final static int AGGRESSIVE = 0;
     private int timeScale = 0;
     private StationaryGameEntity mainEnemy;
@@ -53,12 +54,9 @@ class GameSceneTwo extends GameScene {
 
     @Override
     protected void drawStartScreen() {
-        TITLE_FONT.drawString(GAME_TITLE, TITLE_X, TITLE_Y);
-        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE1, TITLE_X + INS_X_OFFSET, TITLE_Y + INS_Y_OFFSET);
-        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE2, TITLE_X + INS_X_OFFSET,
-                TITLE_Y + INS_Y_OFFSET + LINE_SEPARATION);
-        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE3, TITLE_X + INS_X_OFFSET,
-                TITLE_Y + INS_Y_OFFSET + LINE_SEPARATION + LINE_SEPARATION);
+        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE1, INS_X, INS_Y);
+        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE2, INS_X, INS_Y + LINE_SEPARATION);
+        INSTRUCTION_FONT.drawString(INSTRUCTION_MESSAGE_LINE3, INS_X, INS_Y + LINE_SEPARATION + LINE_SEPARATION);
     }
 
     @Override
