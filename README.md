@@ -53,8 +53,8 @@ None
 ## Assessment and Results 
 Final Mark: 14/14 (100%) 
 
-##### Final Mark Breakdown
-Implementation: 10/10 
+#### Final Mark Breakdown
+Implementation: 10/10\ 
 – Correct implementation of start screen and entity creation: 0.5 marks
 – Correct implementation of the player’s attack behaviour (including images and states): 2 marks
 – Correct implementation of demon & Navec’s behaviour (including images, states and health points rendering): 2 marks
