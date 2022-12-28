@@ -23,11 +23,17 @@ The player’s name is Fae, the daughter of one of the scientists. In order to s
 
 #### Game Controls
 ESC: quit game 
+
 Spacebar: start game
+
 UP, DOWN, LEFT, RIGHT Arrow keys: move player character (Fae) in respective directions 
+
 A: attack 
+
 W: switch to level 1 (second level) of game
+
 K: slow down enemies (only available in second level)
+
 L: speed up enemies (only available in second level)
 
 ## Requirements
