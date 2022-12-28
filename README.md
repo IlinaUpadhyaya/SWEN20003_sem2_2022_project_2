@@ -54,15 +54,15 @@ None
 Final Mark: 14/14 (100%) 
 
 #### Final Mark Breakdown
-Implementation: 10/10\ 
-– Correct implementation of start screen and entity creation: 0.5 marks
-– Correct implementation of the player’s attack behaviour (including images and states): 2 marks
-– Correct implementation of demon & Navec’s behaviour (including images, states and health points rendering): 2 marks
-– Correct implementation of fire behaviour (for both demons & Navec): 2 marks
-– Correct implementation of stationary items’ behaviour: 1 mark
-– Correct implementation of timescale controls: 1 mark
-– Correct implementation of level transition: 0.5 marks
-– Correct implementation of bounds, win and end of game logic: 1 mark
+Implementation: 10/10.  
+– Correct implementation of start screen and entity creation: 0.5 marks. 
+– Correct implementation of the player’s attack behaviour (including images and states): 2 marks. 
+– Correct implementation of demon & Navec’s behaviour (including images, states and health points rendering): 2 marks. 
+– Correct implementation of fire behaviour (for both demons & Navec): 2 marks. 
+– Correct implementation of stationary items’ behaviour: 1 mark. 
+– Correct implementation of timescale controls: 1 mark. 
+– Correct implementation of level transition: 0.5 marks. 
+– Correct implementation of bounds, win and end of game logic: 1 mark. 
 
 Coding Style: 4/4
 – Delegation: breaking the code down into appropriate classes: 0.5 marks
